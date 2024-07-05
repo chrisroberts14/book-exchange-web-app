@@ -7,6 +7,10 @@ class TestListingsRoot:  # pylint: disable=too-few-public-methods
     route = "/listings"
 
     def test_listings_root(self, client):
-        """Test the listings root endpoint."""
+        """
+        Test the listings root endpoint.
+
+        :param client: Test client
+        """
         response = client.get(self.route)
         assert response.status_code == 200
