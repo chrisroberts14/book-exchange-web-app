@@ -3,7 +3,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from .main import root_router
+
 app = FastAPI()
+app.include_router(root_router, prefix="", tags=["root"])
 # books
 # listings / exchange requests
 # users
