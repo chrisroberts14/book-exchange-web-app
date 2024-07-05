@@ -5,7 +5,7 @@
       <sourceFolder url="file://$MODULE_DIR$/backend/test" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/.venv" />
     </content>
-    <orderEntry type="jdk" jdkName="Python 3.12 (.venv)" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Python 3.12 (book-exchange-web-app)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>
