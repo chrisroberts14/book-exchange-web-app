@@ -1,0 +1,8 @@
+[project]
+name = "Book exchange"
+description = "A simple web application for exchanging books"
+version = "0.0.1"
+requires-python = ">=3.10"
+authors = [
+    {name = "Christopher Roberts"}
+]
