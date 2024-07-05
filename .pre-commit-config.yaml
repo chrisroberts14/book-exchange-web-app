@@ -5,6 +5,10 @@ repos:
     -   id: check-yaml
     -   id: end-of-file-fixer
     -   id: trailing-whitespace
+    -   id: mixed-line-ending
+    -   id: check-json
+    -   id: check-toml
+    -   id: requirements-txt-fixer
 - repo: https://github.com/DanielNoord/pydocstringformatter
   rev: v0.7.3
   hooks:
