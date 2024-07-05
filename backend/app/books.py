@@ -1,16 +1,26 @@
 """Book end points for the API."""
 
-from fastapi import APIRouter
+from datetime import date
 
+from fastapi import APIRouter
+from backend.app.api_schemas import Book
 
 book_router = APIRouter()
 
 
 @book_router.get("/")
-async def get_all_books():
+async def get_all_books() -> list[Book]:
     """
     Gets all books in the database.
 
     :return:
     """
-    return
+    # Stubbed
+    return [
+        Book(
+            title="The Great Gatsby",
+            author="F. Scott Fitzgerald",
+            publication_date=date.today(),
+            isbn="9780333791035",
+        )
+    ]
