@@ -21,7 +21,7 @@ engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
-def _fk_pragma_on_connect(dbapi_con, _):
+def _fk_pragma_on_connect(dbapi_con, _):  # pragma: no cover
     dbapi_con.execute("pragma foreign_keys=ON")
 
 
