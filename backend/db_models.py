@@ -1,8 +1,10 @@
 """Database models for the api."""
 
+from uuid import UUID, uuid4
+
 from sqlalchemy import create_engine
 from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy.orm import sessionmaker, declarative_base
+from sqlalchemy.orm import sessionmaker, declarative_base, Mapped, mapped_column
 
 from backend.config import Settings
 
@@ -23,3 +25,13 @@ def get_db():
         db.rollback()
     finally:
         db.close()
+
+
+class UsersDb(Base):  # pylint: disable=too-few-public-methods
+    """Database model for users."""
+
+    __tablename__ = "users"
+
+    id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid4)
+    username: Mapped[str]
+    email: Mapped[str]
