@@ -27,7 +27,7 @@ def get_db():
         db.close()
 
 
-class UsersDb(Base):  # pylint: disable=too-few-public-methods
+class UserDb(Base):  # pylint: disable=too-few-public-methods
     """Database model for users."""
 
     __tablename__ = "users"

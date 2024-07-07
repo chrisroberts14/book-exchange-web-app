@@ -1,5 +1,7 @@
 """Users end points for the API."""
 
+from uuid import uuid4
+
 from fastapi import APIRouter
 
 from backend.app.api_schemas import User
@@ -14,4 +16,4 @@ async def get_all_users() -> list[User]:
 
     :return:
     """
-    return [User(username="johndoe", email="test@test.com")]
+    return [User(id=uuid4(), username="johndoe", email="test@test.com")]

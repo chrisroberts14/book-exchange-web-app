@@ -1,6 +1,7 @@
 """Listings end points for the API."""
 
 from datetime import date
+from uuid import uuid4
 
 from fastapi import APIRouter
 
@@ -18,7 +19,9 @@ async def get_all_listings() -> list[Listing]:
     """
     return [
         Listing(
+            id=uuid4(),
             book=Book(
+                id=uuid4(),
                 title="The Great Gatsby",
                 author="F. Scott Fitzgerald",
                 publication_date="1925-04-10",
@@ -26,9 +29,9 @@ async def get_all_listings() -> list[Listing]:
             ),
             price=0.01,
             condition="new",
-            seller=User(username="johndoe", email="test@test.com"),
+            seller=User(id=uuid4(), username="johndoe", email="test@test.com"),
             sold=False,
-            sold_to=User(username="janedoe", email="test@test.com"),
+            sold_to=User(id=uuid4(), username="janedoe", email="test@test.com"),
             sold_price=0.02,
             sold_date=date.today(),
             created_date=date.today(),
