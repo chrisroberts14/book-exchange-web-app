@@ -1,5 +1,6 @@
 """Database models for the api."""
 
+from datetime import date
 from uuid import UUID, uuid4
 
 from sqlalchemy import create_engine, event, ForeignKey
@@ -29,8 +30,9 @@ event.listen(engine, "connect", _fk_pragma_on_connect)
 Base = declarative_base()
 
 
-def get_db():
+def get_db():  # pragma: no cover
     """Get a database session."""
+    Base.metadata.create_all(bind=engine)
     with SessionLocal() as db:
         try:
             yield db
@@ -122,8 +124,8 @@ class ListingDb(Base, DBCrud):  # pylint: disable=too-few-public-methods
     id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid4)
     price: Mapped[float]
     condition: Mapped[str]
-    sold: Mapped[bool]
+    sold: Mapped[bool] = mapped_column(default=False)
     sold_price: Mapped[float]
-    sold_date: Mapped[str]
-    created_date: Mapped[str]
+    sold_date: Mapped[str] = mapped_column(nullable=True)
+    created_date: Mapped[str] = mapped_column(nullable=False, default=str(date.today()))
     updated_date: Mapped[str]
