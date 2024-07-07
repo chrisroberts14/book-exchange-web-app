@@ -3,10 +3,14 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from backend.db_models import Base, engine
 from .main import root_router
 from .books import book_router
 from .listings import listings_router
 from .users import user_router
+
+
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 app.include_router(root_router, prefix="", tags=["root"])
