@@ -6,3 +6,17 @@ requires-python = ">=3.10"
 authors = [
     {name = "Christopher Roberts"}
 ]
+
+[tool.coverage.run]
+omit = [
+    "tests/*",
+    "alembic/*"
+]
+
+[tool.coverage.report]
+exclude_also = [
+    'if __name__ == "__main__":',
+     # Don't complain if tests don't hit defensive assertion code:
+    "raise NotImplementedError",
+    "@(abc\\.)?abstractmethod",
+]
