@@ -4,13 +4,13 @@ from datetime import date
 from uuid import uuid4
 
 from fastapi import APIRouter
-from backend.app.api_schemas import Book
+from backend.app.api_schemas import BookOut
 
 book_router = APIRouter()
 
 
 @book_router.get("/")
-async def get_all_books() -> list[Book]:
+async def get_all_books() -> list[BookOut]:
     """
     Gets all books in the database.
 
@@ -18,7 +18,7 @@ async def get_all_books() -> list[Book]:
     """
     # Stubbed
     return [
-        Book(
+        BookOut(
             id=uuid4(),
             title="The Great Gatsby",
             author="F. Scott Fitzgerald",

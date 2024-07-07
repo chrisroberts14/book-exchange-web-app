@@ -1,19 +1,19 @@
 """Users end points for the API."""
 
-from uuid import uuid4
+from fastapi import APIRouter, Depends
+from sqlalchemy.orm import Session
 
-from fastapi import APIRouter
-
-from backend.app.api_schemas import User
+from backend.app.api_schemas import UserOut
+from backend.db_models import UserDb, get_db
 
 user_router = APIRouter()
 
 
 @user_router.get("/")
-async def get_all_users() -> list[User]:
+async def get_all_users(db: Session = Depends(get_db)) -> list[UserOut]:
     """
     Gets all users in the database.
 
     :return:
     """
-    return [User(id=uuid4(), username="johndoe", email="test@test.com")]
+    return UserDb.get_all(db)

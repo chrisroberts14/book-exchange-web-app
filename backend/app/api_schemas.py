@@ -6,39 +6,58 @@ from uuid import UUID
 from pydantic import BaseModel, EmailStr
 
 
-class User(BaseModel):
+class UserIn(BaseModel):
     """
     A user in the api.
 
-    This will have some authentication information at some point
+    Used for creating users
     """
 
-    id: UUID
     username: str
     email: EmailStr
 
 
-class Book(BaseModel):
-    """A book in the api."""
+class UserOut(UserIn):
+    """
+    A user in the api.
+
+    Used for returning users
+    """
 
     id: UUID
+
+
+class BookIn(BaseModel):
+    """A book in the api."""
+
     title: str
     author: str
     publication_date: date
     isbn: str
 
 
-class Listing(BaseModel):
-    """A listing in the api."""
+class BookOut(BookIn):
+    """A book in the api."""
 
     id: UUID
-    book: Book
+
+
+class ListingIn(BaseModel):
+    """A listing in the api."""
+
+    book: BookOut
     price: float
     condition: str
-    seller: User
+    seller: UserOut
+    buyer: UserOut
     sold: bool
-    sold_to: User = None
     sold_price: float = None
     sold_date: date = None
     created_date: date
     updated_date: date
+
+
+class ListingOut(ListingIn):
+    """A listing in the api."""
+
+    id: UUID

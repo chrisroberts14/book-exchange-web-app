@@ -5,22 +5,22 @@ from uuid import uuid4
 
 from fastapi import APIRouter
 
-from backend.app.api_schemas import Listing, Book, User
+from backend.app.api_schemas import ListingOut, BookOut, UserOut
 
 listings_router = APIRouter()
 
 
 @listings_router.get("/")
-async def get_all_listings() -> list[Listing]:
+async def get_all_listings() -> list[ListingOut]:
     """
     Gets all listings in the database.
 
     :return:
     """
     return [
-        Listing(
+        ListingOut(
             id=uuid4(),
-            book=Book(
+            book=BookOut(
                 id=uuid4(),
                 title="The Great Gatsby",
                 author="F. Scott Fitzgerald",
@@ -29,9 +29,9 @@ async def get_all_listings() -> list[Listing]:
             ),
             price=0.01,
             condition="new",
-            seller=User(id=uuid4(), username="johndoe", email="test@test.com"),
+            seller=UserOut(id=uuid4(), username="johndoe", email="test@test.com"),
             sold=False,
-            sold_to=User(id=uuid4(), username="janedoe", email="test@test.com"),
+            buyer=UserOut(id=uuid4(), username="janedoe", email="test@test.com"),
             sold_price=0.02,
             sold_date=date.today(),
             created_date=date.today(),
