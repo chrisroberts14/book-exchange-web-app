@@ -1,6 +1,7 @@
 """Module defining the schemas for the API."""
 
 from datetime import date
+from uuid import UUID
 
 from pydantic import BaseModel, EmailStr
 
@@ -12,6 +13,7 @@ class User(BaseModel):
     This will have some authentication information at some point
     """
 
+    id: UUID
     username: str
     email: EmailStr
 
@@ -19,6 +21,7 @@ class User(BaseModel):
 class Book(BaseModel):
     """A book in the api."""
 
+    id: UUID
     title: str
     author: str
     publication_date: date
@@ -28,6 +31,7 @@ class Book(BaseModel):
 class Listing(BaseModel):
     """A listing in the api."""
 
+    id: UUID
     book: Book
     price: float
     condition: str
