@@ -5,11 +5,20 @@ from collections.abc import Generator
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine, StaticPool
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, sessionmaker
 
 from backend.app.core.config import settings
 from backend.app.core.db import init_db, get_db
 from backend.app import app
+
+settings.DATABASE_URL = "sqlite://"
+engine = create_engine(
+    settings.DATABASE_URL,
+    connect_args={"check_same_thread": False},
+    echo=True,
+    poolclass=StaticPool,
+)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
 def override_get_db():
@@ -18,32 +27,24 @@ def override_get_db():
 
     :return:
     """
-    settings.DATABASE_URL = "sqlite://"
-    engine = create_engine(
-        settings.DATABASE_URL,
-        connect_args={"check_same_thread": False},
-        echo=True,
-        poolclass=StaticPool,
-    )
-    with Session(engine) as session:
+    connection = engine.connect()
+    transaction = connection.begin()
+    with SessionLocal(bind=connection) as session:
         init_db(engine)
         yield session
-        session.rollback()
+        session.close()
+        transaction.rollback()
+        connection.close()
 
 
-@pytest.fixture(scope="session")
-def db() -> Generator[Session, None, None]:  # pylint: disable=redefined-outer-name
+@pytest.fixture(scope="function")
+def db() -> Session:  # pylint: disable=redefined-outer-name
     """
     Fixture for the database.
 
     :return:
     """
-    settings.DATABASE_URL = "sqlite://"
-    engine = create_engine(settings.DATABASE_URL)
-    with Session(engine) as session:
-        init_db(engine)
-        yield session
-        session.rollback()
+    return next(override_get_db())
 
 
 @pytest.fixture(scope="module")

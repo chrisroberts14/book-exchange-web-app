@@ -21,3 +21,13 @@ async def create_user(user: UserIn, db: Session = Depends(get_db)) -> UserOut:
     """
     db_user = UserDb(username=user.username, email=user.email)
     return UserDb.create(db, db_user)
+
+
+@users.get("/", response_model=list[UserOut])
+async def get_all_users(db: Session = Depends(get_db)) -> list[UserOut]:
+    """
+    Get all users.
+
+    :return:
+    """
+    return UserDb.get_all(db)
