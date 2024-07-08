@@ -2,7 +2,8 @@
 
 from uuid import uuid4, UUID
 
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import ForeignKey
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from backend.app.core.db import Base
 
@@ -34,6 +35,17 @@ class Crud:  # pylint: disable=too-few-public-methods
         """
         return db.query(cls).all()
 
+    @classmethod
+    def get_by_id(cls, db, id_):
+        """
+        Get an object by id.
+
+        :param db: database session
+        :param id_: id of the object
+        :return: object
+        """
+        return db.query(cls).get(id_)
+
 
 class UserDb(Base, Crud):  # pylint: disable=too-few-public-methods
     """User database table."""
@@ -43,3 +55,18 @@ class UserDb(Base, Crud):  # pylint: disable=too-few-public-methods
     id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid4)
     username: Mapped[str]
     email: Mapped[str]
+    books: Mapped[list["BookDb"]] = relationship("BookDb", back_populates="owner")
+
+
+class BookDb(Base, Crud):  # pylint: disable=too-few-public-methods
+    """Book database table."""
+
+    __tablename__ = "books"
+
+    id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid4)
+    title: Mapped[str]
+    author: Mapped[str]
+    isbn: Mapped[str]
+    description: Mapped[str]
+    owner_id: Mapped[UUID] = mapped_column(ForeignKey("users.id"))
+    owner: Mapped["UserDb"] = relationship("UserDb", back_populates="books")

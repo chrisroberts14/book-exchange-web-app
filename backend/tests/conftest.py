@@ -7,9 +7,11 @@ from fastapi.testclient import TestClient
 from sqlalchemy import create_engine, StaticPool
 from sqlalchemy.orm import Session, sessionmaker
 
+from backend.app.api_models import UserOut
 from backend.app.core.config import settings
 from backend.app.core.db import init_db, get_db
 from backend.app import app
+from backend.app.db_models import UserDb
 
 settings.DATABASE_URL = "sqlite://"
 engine = create_engine(
@@ -52,9 +54,22 @@ def client() -> Generator[TestClient, None, None]:  # pylint: disable=redefined-
     """
     Fixture for the test client.
 
-    :param db:
     :return:
     """
     app.dependency_overrides[get_db] = override_get_db
     with TestClient(app) as test_client:
         yield test_client
+
+
+@pytest.fixture(scope="function")
+def user_sample(db) -> UserOut:  # pylint: disable=redefined-outer-name
+    """
+    Fixture for a sample user.
+
+    :return:
+    """
+    user = UserDb(username="test", email="test@test.com")
+    db.add(user)
+    db.commit()
+    db.refresh(user)
+    return user

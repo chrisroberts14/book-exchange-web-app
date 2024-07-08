@@ -5,10 +5,12 @@ from fastapi.responses import RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
 
 from backend.app.api.users import users
+from backend.app.api.books import books
 
 
 app = FastAPI()
 app.include_router(users, prefix="/users", tags=["users"])
+app.include_router(books, prefix="/books", tags=["books"])
 
 app.add_middleware(
     CORSMiddleware,
