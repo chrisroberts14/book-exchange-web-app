@@ -30,7 +30,6 @@ class TestUserRoot:  # pylint: disable=too-few-public-methods
             UserDb(username=f"test{i}", email=f"test{i}@test.com") for i in range(10)
         ]
         db.bulk_save_objects(users)
-        db.commit()
         response = client.get(self.route)
         assert response.status_code == 200, response.json()
         assert {user.username for user in users} == {

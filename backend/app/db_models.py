@@ -20,9 +20,8 @@ class Crud:  # pylint: disable=too-few-public-methods
         :param db: database session
         :return: created object
         """
-        db.add(obj)
-        db.commit()
-        db.refresh(obj)
+        with db.begin_nested():
+            db.add(obj)
         return obj
 
     @classmethod
@@ -44,7 +43,7 @@ class Crud:  # pylint: disable=too-few-public-methods
         :param id_: id of the object
         :return: object
         """
-        return db.query(cls).get(id_)
+        return db.get(cls, id_)
 
 
 class UserDb(Base, Crud):  # pylint: disable=too-few-public-methods

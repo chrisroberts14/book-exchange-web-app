@@ -1,8 +1,10 @@
 """Module for book endpoints."""
 
-from fastapi import APIRouter, Depends
+from uuid import UUID
+
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from starlette.status import HTTP_201_CREATED
+from starlette.status import HTTP_201_CREATED, HTTP_404_NOT_FOUND
 
 from backend.app.api_models import BookOut, BookIn
 from backend.app.core.db import get_db
@@ -32,3 +34,18 @@ async def get_all_books(db: Session = Depends(get_db)) -> list[BookOut]:
     :return:
     """
     return BookDb.get_all(db)
+
+
+@books.get("/{book_id}")
+async def get_book(book_id: UUID, db: Session = Depends(get_db)) -> BookOut:
+    """
+    Get a book by id.
+
+    :param book_id: id of the book
+    :param db: database session
+    :return:
+    """
+    book = BookDb.get_by_id(db, book_id)
+    if book is None:
+        raise HTTPException(status_code=HTTP_404_NOT_FOUND, detail="Book not found")
+    return book

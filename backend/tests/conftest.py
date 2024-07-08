@@ -19,6 +19,7 @@ engine = create_engine(
     poolclass=StaticPool,
 )
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+Base.metadata.create_all(bind=engine)
 
 
 def override_get_db():
@@ -27,12 +28,15 @@ def override_get_db():
 
     :return:
     """
+    # pylint: disable=duplicate-code
     connection = engine.connect()
-    connection.begin()
-    with SessionLocal(bind=connection) as session:
-        Base.metadata.create_all(bind=engine)
+    session = Session(bind=connection)
+    savepoint = connection.begin_nested()
+    try:
         yield session
-        Base.metadata.drop_all(bind=engine)
+    finally:
+        session.close()
+        savepoint.rollback()
 
 
 @pytest.fixture(scope="function")
@@ -42,7 +46,11 @@ def db() -> Session:  # pylint: disable=redefined-outer-name
 
     :return:
     """
-    return next(override_get_db())
+    for session in override_get_db():
+        try:
+            yield session
+        finally:
+            session.rollback()
 
 
 @pytest.fixture(scope="module")

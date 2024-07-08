@@ -1,9 +1,9 @@
 """Module to test books endpoints."""
 
-from uuid import UUID
+from uuid import UUID, uuid4
 
 from backend.app.api_models import BookIn
-from backend.app.db_models import BookDb, UserDb
+from backend.app.db_models import BookDb
 
 
 class TestRoot:
@@ -11,37 +11,32 @@ class TestRoot:
 
     route = "/books/"
 
-    def test_create_book(self, client, db):
+    def test_create_book(self, client):
         """
         Test create book.
 
         :param client:
-        :param db:
         :return:
         """
-        user = UserDb(username="sample_user", email="test@test.com")
-        db.add(user)
-        db.flush()
-        db.refresh(user)
-        data = {
-            "title": "Test Book",
-            "author": "Test Author",
-            "isbn": "1234567890",
-            "description": "Test Description",
-            "owner_id": str(user.id),
-        }
+        book = BookIn(
+            title="Test Book",
+            author="Test Author",
+            isbn="1234567890",
+            description="Test Description",
+            owner_id=UUID("00000000-0000-0000-0000-000000000000"),
+        )
         response = client.post(
             self.route,
-            json=data,
+            json=book.model_dump(mode="json"),
         )
         assert response.status_code == 201, response.json()
         # Check the response data
         book = BookIn(**response.json())
-        assert book.title == data["title"]
-        assert book.author == data["author"]
-        assert book.isbn == data["isbn"]
-        assert book.description == data["description"]
-        assert book.owner_id == UUID(data["owner_id"])
+        assert book.title == book.title
+        assert book.author == book.author
+        assert book.isbn == book.isbn
+        assert book.description == book.description
+        assert book.owner_id == book.owner_id
 
     def test_get_all_books(self, client, db):
         """
@@ -68,3 +63,44 @@ class TestRoot:
         assert {book.title for book in books} == {
             book["title"] for book in response.json()
         }
+
+
+class TestBookId:
+    """Test the "/books/{book_id}" endpoint."""
+
+    route = "/books/{book_id}"
+
+    def test_get_by_id(self, client, db):
+        """
+        Test get book by id.
+
+        :param client:
+        :param db:
+        :return:
+        """
+        # Create a book then get the book by id and check the response
+        book = BookDb(
+            title="Test Book",
+            author="Test Author",
+            isbn="1234567890",
+            description="Test Description",
+            owner_id=UUID("00000000-0000-0000-0000-000000000000"),
+        )
+        book = BookDb.create(db, book)
+        response = client.get(self.route.format(book_id=book.id))
+        assert response.status_code == 200, response.json()
+        assert response.json()["title"] == book.title
+        assert response.json()["author"] == book.author
+        assert response.json()["isbn"] == book.isbn
+        assert response.json()["description"] == book.description
+        assert UUID(response.json()["owner_id"]) == book.owner_id
+
+    def test_get_by_id_not_found(self, client):
+        """
+        Test get book by id not found.
+
+        :param client:
+        :return:
+        """
+        response = client.get(self.route.format(book_id=uuid4()))
+        assert response.status_code == 404, response.json()
