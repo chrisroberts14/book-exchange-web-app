@@ -9,8 +9,8 @@ authors = [
 
 [tool.coverage.run]
 omit = [
-    "tests/*",
-    "alembic/*"
+    "backend/tests/*",
+    "backend/alembic/*"
 ]
 
 [tool.coverage.report]

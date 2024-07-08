@@ -1,110 +1,59 @@
-"""Pytest fixtures."""
+"""Module containing fixtures for the tests."""
+
+from collections.abc import Generator
 
 import pytest
-
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine, StaticPool
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import Session
 
+from backend.app.core.config import settings
+from backend.app.core.db import init_db, get_db
 from backend.app import app
-from backend.config import Settings
-from backend.db_models import Base, get_db, UserDb, BookDb, ListingDb
-
-Settings.SQLALCHEMY_DATABASE_URL = "sqlite:///:memory:"
-
-engine = create_engine(
-    Settings.SQLALCHEMY_DATABASE_URL,
-    connect_args={"check_same_thread": False},
-    poolclass=StaticPool,
-)
-TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-Base.metadata.create_all(bind=engine)
 
 
-def override_get_db():  # pylint: disable=redefined-outer-name
+def override_get_db():
     """
-    Override the get_db dependency to use the test database.
+    Override the get_db dependency.
 
     :return:
     """
-    db_session = TestingSessionLocal()
-    yield db_session
-    db_session.rollback()
-
-
-@pytest.fixture(scope="function")
-def db():  # pylint: disable=redefined-outer-name
-    """
-    Get a database session.
-
-    :return: Session
-    """
-    with TestingSessionLocal() as db_session:
-        yield db_session
-        db_session.rollback()
+    settings.DATABASE_URL = "sqlite://"
+    engine = create_engine(
+        settings.DATABASE_URL,
+        connect_args={"check_same_thread": False},
+        echo=True,
+        poolclass=StaticPool,
+    )
+    with Session(engine) as session:
+        init_db(engine)
+        yield session
+        session.rollback()
 
 
 @pytest.fixture(scope="session")
-def client():  # pylint: disable=redefined-outer-name
+def db() -> Generator[Session, None, None]:  # pylint: disable=redefined-outer-name
     """
-    Get the test client for the FastAPI app.
+    Fixture for the database.
 
-    :return: TestClient
+    :return:
+    """
+    settings.DATABASE_URL = "sqlite://"
+    engine = create_engine(settings.DATABASE_URL)
+    with Session(engine) as session:
+        init_db(engine)
+        yield session
+        session.rollback()
+
+
+@pytest.fixture(scope="module")
+def client() -> Generator[TestClient, None, None]:  # pylint: disable=redefined-outer-name
+    """
+    Fixture for the test client.
+
+    :param db:
+    :return:
     """
     app.dependency_overrides[get_db] = override_get_db
-    return TestClient(app)
-
-
-@pytest.fixture(scope="function")
-def user(db):  # pylint: disable=redefined-outer-name
-    """
-    Test user for use in tests.
-
-    :return:
-    """
-    user_entry = UserDb(username="User 1", email="test@test.com")
-    db.add(user_entry)
-    db.flush()
-    return UserDb.get_all(db)[0]
-
-
-@pytest.fixture(scope="function")
-def book(db):  # pylint: disable=redefined-outer-name
-    """
-    Test book for use in tests.
-
-    :return:
-    """
-    book_entry = BookDb(
-        title="The Great Gatsby",
-        author="F. Scott Fitzgerald",
-        publication_date="1925-04-10",
-        isbn="9780333791035",
-    )
-    db.add(book_entry)
-    db.flush()
-    return BookDb.get_all(db)[0]
-
-
-@pytest.fixture(scope="function")
-def listing(db, user, book):  # pylint: disable=redefined-outer-name
-    """
-    Test listing for use in tests.
-
-    :return:
-    """
-    listing_entry = ListingDb(
-        book_id=book.id,
-        price=0.01,
-        condition="new",
-        seller_id=user.id,
-        sold=False,
-        buyer_id=user.id,
-        sold_price=0.02,
-        sold_date="2021-01-01",
-        created_date="2021-01-01",
-        updated_date="2021-01-01",
-    )
-    db.add(listing_entry)
-    db.flush()
-    return ListingDb.get_all(db)[0]
+    with TestClient(app) as test_client:
+        yield test_client
