@@ -58,15 +58,15 @@ class DBCrud:
         return db.query(cls).all()
 
     @classmethod
-    def get_by_pk(cls, db, pk):
+    def get_by_id(cls, db, row_id):
         """
         Get an instance by primary key.
 
         :param db:
-        :param pk:
+        :param row_id:
         :return:
         """
-        return db.get(cls, pk)
+        return db.get(cls, row_id)
 
 
 class UserDb(Base, DBCrud):  # pylint: disable=too-few-public-methods
