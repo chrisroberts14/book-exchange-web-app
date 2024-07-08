@@ -66,7 +66,7 @@ class DBCrud:
         :param pk:
         :return:
         """
-        return db.query(cls).get(pk)
+        return db.get(cls, pk)
 
 
 class UserDb(Base, DBCrud):  # pylint: disable=too-few-public-methods
