@@ -3,7 +3,7 @@
 from uuid import UUID
 
 from backend.app.api_models import BookIn
-from backend.app.db_models import BookDb
+from backend.app.db_models import BookDb, UserDb
 
 
 class TestRoot:
@@ -11,20 +11,24 @@ class TestRoot:
 
     route = "/books/"
 
-    def test_create_book(self, client, user_sample):
+    def test_create_book(self, client, db):
         """
         Test create book.
 
         :param client:
-        :param user_sample:
+        :param db:
         :return:
         """
+        user = UserDb(username="sample_user", email="test@test.com")
+        db.add(user)
+        db.flush()
+        db.refresh(user)
         data = {
             "title": "Test Book",
             "author": "Test Author",
             "isbn": "1234567890",
             "description": "Test Description",
-            "owner_id": str(user_sample.id),
+            "owner_id": str(user.id),
         }
         response = client.post(
             self.route,
