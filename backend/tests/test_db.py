@@ -3,6 +3,7 @@
 from datetime import timedelta, date
 
 import pytest
+from sqlalchemy.orm import Session
 
 from backend.app.api_models import (
     UserOut,
@@ -18,7 +19,7 @@ from backend.app.db_models import UserDb, BookDb, ListingDb
 class TestUserDb:
     """Test the userdb table."""
 
-    def test_create_user(self, db):
+    def test_create_user(self, db: Session):
         """
         Test create user.
 
@@ -30,7 +31,7 @@ class TestUserDb:
         assert db_user.username == user.username
         assert db_user.email == user.email
 
-    def test_get_all_users(self, db):
+    def test_get_all_users(self, db: Session):
         """
         Test get all users.
 
@@ -49,7 +50,7 @@ class TestUserDb:
         }
         assert {db_user.email for db_user in db_users} == {user.email for user in users}
 
-    def test_get_by_id(self, db, sample_user: UserOut):
+    def test_get_by_id(self, db: Session, sample_user: UserOut):
         """
         Test get by id.
 
@@ -66,7 +67,7 @@ class TestUserDb:
             {"email": "test2@test.com"},
         ],
     )
-    def test_update_user(self, db, sample_user: UserOut, change: dict):
+    def test_update_user(self, db: Session, sample_user: UserOut, change: dict):
         """
         Test update user.
 
@@ -78,7 +79,7 @@ class TestUserDb:
         assert updated_user.id == sample_user.id
         assert getattr(updated_user, list(change.keys())[0]) == list(change.values())[0]
 
-    def test_delete_user(self, db, sample_user: UserOut):
+    def test_delete_user(self, db: Session, sample_user: UserOut):
         """
         Test delete user.
 
@@ -89,7 +90,9 @@ class TestUserDb:
         UserDb.delete(db, sample_user.id)
         assert UserDb.get_by_id(db, sample_user.id) is None
 
-    def test_delete_user_cascade(self, db, sample_user: UserOut, sample_listing):
+    def test_delete_user_cascade(
+        self, db: Session, sample_user: UserOut, sample_listing: ListingOut
+    ):
         """
         Test delete user cascade deletes both owned books and listings.
 
@@ -108,7 +111,7 @@ class TestUserDb:
 class TestBookDb:
     """Class to test the book table."""
 
-    def test_create_book(self, db, sample_user):
+    def test_create_book(self, db: Session, sample_user: UserOut):
         """
         Test creating a book.
 
@@ -126,7 +129,7 @@ class TestBookDb:
         assert db_book.title == book.title
         assert db_book.owner.id == book.owner_id
 
-    def test_get_all_books(self, db, sample_user):
+    def test_get_all_books(self, db: Session, sample_user: UserOut):
         """
         Test getting all books.
 
@@ -151,7 +154,7 @@ class TestBookDb:
         )
         assert all(db_book.owner.id == sample_user.id for db_book in db_books)
 
-    def test_get_book_by_id(self, db, sample_book):
+    def test_get_book_by_id(self, db: Session, sample_book: BookOut):
         """
         Test getting a book by id.
 
@@ -174,7 +177,7 @@ class TestBookDb:
         ],
         ids=["title", "author", "isbn", "description"],
     )
-    def test_update_book(self, db, sample_book, change):
+    def test_update_book(self, db: Session, sample_book: BookOut, change: dict):
         """
         Test updating a book.
 
@@ -186,7 +189,7 @@ class TestBookDb:
         assert updated_user.id == sample_book.id
         assert getattr(updated_user, list(change.keys())[0]) == list(change.values())[0]
 
-    def test_delete_book(self, db, sample_book: BookOut):
+    def test_delete_book(self, db: Session, sample_book: BookOut):
         """
         Test delete book.
 
@@ -197,7 +200,9 @@ class TestBookDb:
         BookDb.delete(db, sample_book.id)
         assert BookDb.get_by_id(db, sample_book.id) is None
 
-    def test_delete_book_cascade(self, db, sample_book: BookOut, sample_listing):
+    def test_delete_book_cascade(
+        self, db: Session, sample_book: BookOut, sample_listing: ListingOut
+    ):
         """
         Test delete book cascade deletes listings.
 
@@ -215,7 +220,7 @@ class TestBookDb:
 class TestListingDb:
     """Class to test the listing table."""
 
-    def test_create(self, db, sample_user, sample_book):
+    def test_create(self, db: Session, sample_user: UserOut, sample_book: BookOut):
         """
         Test create a listing.
 
@@ -232,7 +237,9 @@ class TestListingDb:
         assert db_listing.seller.id == listing.seller_id
         assert db_listing.book.id == listing.book_id
 
-    def test_get_all(self, db, sample_user, sample_book_list):
+    def test_get_all(
+        self, db: Session, sample_user: UserOut, sample_book_list: list[BookOut]
+    ):
         """
         Test get all listings.
 
@@ -258,7 +265,7 @@ class TestListingDb:
             for db_listing in db_listings
         )
 
-    def test_get_by_id(self, db, sample_listing):
+    def test_get_by_id(self, db: Session, sample_listing: ListingOut):
         """
         Test getting a listing by id.
 
@@ -278,7 +285,7 @@ class TestListingDb:
         ],
         ids=["title", "price", "description", "sold", "listed_date"],
     )
-    def test_update(self, db, sample_listing, change):
+    def test_update(self, db: Session, sample_listing: ListingOut, change: dict):
         """
         Test update method.
 
@@ -295,7 +302,7 @@ class TestListingDb:
             getattr(updated_listing, list(change.keys())[0]) == list(change.values())[0]
         )
 
-    def test_delete_listing(self, db, sample_listing: ListingOut):
+    def test_delete_listing(self, db: Session, sample_listing: ListingOut):
         """
         Test delete listing.
 
