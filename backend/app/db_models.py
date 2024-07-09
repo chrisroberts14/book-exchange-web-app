@@ -1,6 +1,7 @@
 """Module containing database models and crud operations."""
 
 from uuid import uuid4, UUID
+from abc import ABC
 
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -8,10 +9,10 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from backend.app.core.db import Base
 
 
-class Crud:  # pylint: disable=too-few-public-methods
+class Crud(ABC):  # pylint: disable=too-few-public-methods
     """Base class for CRUD operations."""
 
-    id = None
+    id = NotImplemented
 
     @classmethod
     def create(cls, db, obj):
