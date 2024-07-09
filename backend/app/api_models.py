@@ -1,6 +1,7 @@
 """Module defining api schemas."""
 
 from uuid import UUID
+from datetime import date
 
 from pydantic import BaseModel as PydanticBaseModel
 from pydantic import ConfigDict
@@ -46,10 +47,10 @@ class BookPatch(BaseModel):
 class BookBase(BaseModel):
     """Base model for book types."""
 
-    title: str | None
-    author: str | None
-    isbn: str | None
-    description: str | None = "No description provided."
+    title: str
+    author: str
+    isbn: str
+    description: str = "No description provided."
 
 
 class BookIn(BookBase):
@@ -63,3 +64,43 @@ class BookOut(BookBase):
 
     id: UUID
     owner: UserOut
+
+
+class ListingBase(BaseModel):
+    """Base model for a book listing."""
+
+    title: str
+    buyer: UserOut | None = None
+    description: str | None = None
+    price: float
+    sold: bool = False
+    listed_date: str = str(date.today())
+
+
+class ListingIn(ListingBase):
+    """Model for creating a new listing."""
+
+    seller_id: UUID
+    book_id: UUID
+
+
+class ListingPatch(ListingBase):
+    """Model for updating a listing."""
+
+    title: str | None = None
+    book: BookOut | None = None
+    seller: UserOut | None = None
+    buyer: UserOut | None = None
+    description: str | None = None
+    price: float | None = None
+    sold: bool | None = None
+    listed_date: str | None = None
+
+
+class ListingOut(ListingBase):
+    """ListingIn is a Pydantic model that represents the input data for creating a new listing."""
+
+    id: UUID
+    seller: UserOut
+    book: BookOut
+    buyer: UserOut | None

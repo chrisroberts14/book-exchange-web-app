@@ -6,11 +6,13 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from backend.app.api.users import users
 from backend.app.api.books import books
+from backend.app.api.listings import listings
 
 
 app = FastAPI()
 app.include_router(users, prefix="/users", tags=["users"])
 app.include_router(books, prefix="/books", tags=["books"])
+app.include_router(listings, prefix="/listings", tags=["listings"])
 
 app.add_middleware(
     CORSMiddleware,

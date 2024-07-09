@@ -1,5 +1,6 @@
 """Module containing database models and crud operations."""
 
+from datetime import date
 from uuid import uuid4, UUID
 
 from sqlalchemy import ForeignKey
@@ -77,6 +78,12 @@ class UserDb(Base, Crud):  # pylint: disable=too-few-public-methods
     username: Mapped[str]
     email: Mapped[str]
     books: Mapped[list["BookDb"]] = relationship("BookDb", back_populates="owner")
+    listings: Mapped[list["ListingDb"]] = relationship(
+        "ListingDb", back_populates="seller", foreign_keys="ListingDb.seller_id"
+    )
+    purchases: Mapped[list["ListingDb"]] = relationship(
+        "ListingDb", back_populates="buyer", foreign_keys="ListingDb.buyer_id"
+    )
 
 
 class BookDb(Base, Crud):  # pylint: disable=too-few-public-methods
@@ -90,4 +97,37 @@ class BookDb(Base, Crud):  # pylint: disable=too-few-public-methods
     isbn: Mapped[str]
     description: Mapped[str]
     owner_id: Mapped[UUID] = mapped_column(ForeignKey("users.id"))
-    owner: Mapped["UserDb"] = relationship("UserDb", back_populates="books")
+    owner: Mapped["UserDb"] = relationship(
+        "UserDb", back_populates="books", foreign_keys=[owner_id]
+    )
+    listing: Mapped["ListingDb"] = relationship(
+        "ListingDb", back_populates="book", uselist=False
+    )
+
+
+class ListingDb(Base, Crud):
+    """Listing database table."""
+
+    __tablename__ = "listings"
+
+    book_id: Mapped[UUID] = mapped_column(ForeignKey("books.id"), unique=True)
+    book: Mapped["BookDb"] = relationship(
+        "BookDb", back_populates="listing", foreign_keys=[book_id]
+    )
+    seller_id: Mapped[UUID] = mapped_column(ForeignKey("users.id"))
+    seller: Mapped["UserDb"] = relationship(
+        "UserDb", back_populates="listings", foreign_keys=[seller_id]
+    )
+    buyer_id: Mapped[UUID] = mapped_column(
+        ForeignKey("users.id"), default=None, nullable=True
+    )
+    buyer: Mapped["UserDb"] = relationship(
+        "UserDb", back_populates="purchases", foreign_keys=[buyer_id]
+    )
+
+    id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid4)
+    title: Mapped[str]
+    description: Mapped[str] = mapped_column(default=None, nullable=True)
+    price: Mapped[float]
+    sold: Mapped[bool] = mapped_column(default=False)
+    listed_date: Mapped[str] = mapped_column(default=str(date.today()))

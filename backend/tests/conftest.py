@@ -7,10 +7,10 @@ from fastapi.testclient import TestClient
 from sqlalchemy import create_engine, StaticPool, event
 from sqlalchemy.orm import Session, sessionmaker
 
-from backend.app.api_models import UserOut, BookOut
+from backend.app.api_models import UserOut, BookOut, ListingOut
 from backend.app.core.config import settings
 from backend.app.core.db import get_db, Base
-from backend.app.db_models import UserDb, BookDb
+from backend.app.db_models import UserDb, BookDb, ListingDb
 from backend.app import app
 
 settings.DATABASE_URL = "sqlite://"
@@ -107,5 +107,50 @@ def sample_book(db, sample_user: UserOut) -> BookOut:  # pylint: disable=redefin
             isbn="1234567890",
             description="Test Description",
             owner=sample_user,
+        ),
+    )
+
+
+@pytest.fixture(scope="function")
+def sample_book_list(db, sample_user: UserOut) -> list[BookOut]:  # pylint: disable=redefined-outer-name
+    """
+    Fixture for a list of sample books.
+
+    :param db:
+    :param sample_user:
+    :return:
+    """
+    return [
+        BookDb.create(
+            db,
+            BookDb(
+                title=f"Test Book {i}",
+                author=f"Test Author {i}",
+                isbn=f"{i}",
+                description=f"Test Description {i}",
+                owner=sample_user,
+            ),
+        )
+        for i in range(10)
+    ]
+
+
+@pytest.fixture(scope="function")
+def sample_listing(db, sample_user, sample_book) -> ListingOut:  # pylint: disable=redefined-outer-name
+    """
+    Fixture for a sample listing.
+
+    :param db:
+    :param sample_user:
+    :param sample_book:
+    :return:
+    """
+    return ListingDb.create(
+        db,
+        ListingDb(
+            title="Test Listing",
+            book=sample_book,
+            seller=sample_user,
+            price=10.0,
         ),
     )

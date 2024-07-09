@@ -1,9 +1,11 @@
 """Module to test db functions."""
 
+from datetime import timedelta, date
+
 import pytest
 
-from backend.app.api_models import UserOut, UserPatch, BookPatch
-from backend.app.db_models import UserDb, BookDb
+from backend.app.api_models import UserOut, UserPatch, BookPatch, ListingPatch
+from backend.app.db_models import UserDb, BookDb, ListingDb
 
 
 class TestUserDb:
@@ -150,3 +152,87 @@ class TestBookDb:
         updated_user = BookDb.update(db, BookPatch(**change), sample_book.id)
         assert updated_user.id == sample_book.id
         assert getattr(updated_user, list(change.keys())[0]) == list(change.values())[0]
+
+
+class TestListingDb:
+    """Class to test the listing table."""
+
+    def test_create(self, db, sample_user, sample_book):
+        """
+        Test create a listing.
+
+        :return:
+        """
+        listing = ListingDb(
+            title="Test Listing",
+            book=sample_book,
+            seller=sample_user,
+            price=10.0,
+        )
+        db_listing = ListingDb.create(db, listing)
+        assert db_listing.title == listing.title
+        assert db_listing.seller.id == listing.seller_id
+        assert db_listing.book.id == listing.book_id
+
+    def test_get_all(self, db, sample_user, sample_book_list):
+        """
+        Test get all listings.
+
+        :return:
+        """
+        listings = []
+        for i, book in enumerate(sample_book_list):
+            listing = ListingDb(
+                title=f"Test Listing {i}",
+                book=book,
+                seller=sample_user,
+                price=10.0,
+            )
+            listings.append(ListingDb.create(db, listing))
+        db_listings = ListingDb.get_all(db)
+        assert all(
+            db_listing.title in [listing.title for listing in listings]
+            for db_listing in db_listings
+        )
+        assert all(db_listing.seller.id == sample_user.id for db_listing in db_listings)
+        assert all(
+            db_listing.book.id in [book.id for book in sample_book_list]
+            for db_listing in db_listings
+        )
+
+    def test_get_by_id(self, db, sample_listing):
+        """
+        Test getting a listing by id.
+
+        :return:
+        """
+        db_listing = ListingDb.get_by_id(db, sample_listing.id)
+        assert db_listing.id == sample_listing.id
+
+    @pytest.mark.parametrize(
+        "change",
+        [
+            {"title": "New Title"},
+            {"price": 20.0},
+            {"description": "New Description"},
+            {"sold": True},
+            {"listed_date": str(date.today() - timedelta(days=1))},
+        ],
+        ids=["title", "price", "description", "sold", "listed_date"],
+    )
+    def test_update(self, db, sample_listing, change):
+        """
+        Test update method.
+
+        :param db:
+        :param sample_listing:
+        :param change:
+        :return:
+        """
+        updated_listing = ListingDb.update(
+            db, ListingPatch(**change), sample_listing.id
+        )
+        assert updated_listing.id == sample_listing.id
+        assert (
+            getattr(updated_listing, list(change.keys())[0]) == list(change.values())[0]
+        )
