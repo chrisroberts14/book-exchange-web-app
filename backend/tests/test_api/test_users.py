@@ -3,6 +3,8 @@
 from uuid import uuid4
 
 import pytest
+from fastapi.testclient import TestClient
+from sqlalchemy.orm import Session
 
 from backend.app.api_models import UserIn, UserOut, BookOut, UserPatch
 from backend.app.db_models import UserDb
@@ -13,7 +15,7 @@ class TestUserRoot:  # pylint: disable=too-few-public-methods
 
     route = "/users/"
 
-    def test_create_user(self, client):
+    def test_create_user(self, client: TestClient):
         """
         Test create user.
 
@@ -23,7 +25,7 @@ class TestUserRoot:  # pylint: disable=too-few-public-methods
         response = client.post(self.route, json=user.model_dump())
         assert response.status_code == 201, response.json()
 
-    def test_get_all_users(self, client, db):
+    def test_get_all_users(self, client: TestClient, db: Session):
         """
         Test get all users.
 
@@ -49,7 +51,7 @@ class TestUserById:
 
     route = "/users/{user_id}"
 
-    def test_get_by_id(self, client, sample_user: UserOut):
+    def test_get_by_id(self, client: TestClient, sample_user: UserOut):
         """
         Test get user by id.
 
@@ -62,7 +64,7 @@ class TestUserById:
         assert response.status_code == 200, response.json()
         assert result.id == sample_user.id
 
-    def test_get_by_id_not_found(self, client):
+    def test_get_by_id_not_found(self, client: TestClient):
         """
         Test get user by id not found.
 
@@ -80,7 +82,7 @@ class TestUserById:
         ],
         ids=["change username", "change email"],
     )
-    def test_update_user(self, client, sample_user: UserOut, change: dict):
+    def test_update_user(self, client: TestClient, sample_user: UserOut, change: dict):
         """
         Test update user.
 
@@ -97,7 +99,7 @@ class TestUserById:
         assert result.id == sample_user.id
         assert getattr(result, list(change.keys())[0]) == list(change.values())[0]
 
-    def test_update_user_bad(self, client):
+    def test_update_user_bad(self, client: TestClient):
         """
         Test attempting to update a user that doesn't exist raises a 404.
 
@@ -110,7 +112,7 @@ class TestUserById:
         )
         assert response.status_code == 404, response.json()
 
-    def test_user_delete(self, client, sample_user):
+    def test_user_delete(self, client: TestClient, sample_user: UserOut):
         """
         Test deleting a user works.
 
@@ -119,7 +121,7 @@ class TestUserById:
         response = client.delete(self.route.format(user_id=sample_user.id))
         assert response.status_code == 204, response.json()
 
-    def test_user_delete_bad(self, client):
+    def test_user_delete_bad(self, client: TestClient):
         """
         Test attempting to delete a user that doesn't exist raises a 404.
 
@@ -133,7 +135,9 @@ class TestUserById:
 class TestUserBooks:
     """Tests to test the "/users/{user_id}/books" endpoint."""
 
-    def test_get_users_books(self, client, sample_user: UserOut, sample_book: BookOut):
+    def test_get_users_books(
+        self, client: TestClient, sample_user: UserOut, sample_book: BookOut
+    ):
         """
         Test get user's books.
 
@@ -148,7 +152,7 @@ class TestUserBooks:
             assert book.owner.id == sample_user.id
             assert book.id == sample_book.id
 
-    def test_get_users_books_not_found(self, client):
+    def test_get_users_books_not_found(self, client: TestClient):
         """
         Test get user's books not found.
 
