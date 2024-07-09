@@ -80,7 +80,7 @@ def client() -> Generator[TestClient, None, None]:  # pylint: disable=redefined-
 
 
 @pytest.fixture(scope="function")
-def sample_user(db) -> UserOut:  # pylint: disable=redefined-outer-name
+def sample_user(db: Session) -> UserOut:  # pylint: disable=redefined-outer-name
     """
     Fixture for a sample user.
 
@@ -91,7 +91,7 @@ def sample_user(db) -> UserOut:  # pylint: disable=redefined-outer-name
 
 
 @pytest.fixture(scope="function")
-def sample_book(db, sample_user: UserOut) -> BookOut:  # pylint: disable=redefined-outer-name
+def sample_book(db: Session, sample_user: UserOut) -> BookOut:  # pylint: disable=redefined-outer-name
     """
     Fixture for a sample book.
 
@@ -112,7 +112,7 @@ def sample_book(db, sample_user: UserOut) -> BookOut:  # pylint: disable=redefin
 
 
 @pytest.fixture(scope="function")
-def sample_book_list(db, sample_user: UserOut) -> list[BookOut]:  # pylint: disable=redefined-outer-name
+def sample_book_list(db: Session, sample_user: UserOut) -> list[BookOut]:  # pylint: disable=redefined-outer-name
     """
     Fixture for a list of sample books.
 
@@ -136,7 +136,11 @@ def sample_book_list(db, sample_user: UserOut) -> list[BookOut]:  # pylint: disa
 
 
 @pytest.fixture(scope="function")
-def sample_listing(db, sample_user, sample_book) -> ListingOut:  # pylint: disable=redefined-outer-name
+def sample_listing(
+    db: Session,  # pylint: disable=redefined-outer-name
+    sample_user: UserOut,  # pylint: disable=redefined-outer-name
+    sample_book: BookOut,  # pylint: disable=redefined-outer-name
+) -> ListingOut:
     """
     Fixture for a sample listing.
 
