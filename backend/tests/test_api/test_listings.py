@@ -4,9 +4,11 @@ from datetime import date, timedelta
 from uuid import uuid4
 
 import pytest
+from sqlalchemy.orm import Session
 from starlette.status import HTTP_201_CREATED, HTTP_200_OK, HTTP_404_NOT_FOUND
+from fastapi.testclient import TestClient
 
-from backend.app.api_models import ListingOut, ListingPatch
+from backend.app.api_models import ListingOut, ListingPatch, BookOut, UserOut
 from backend.app.db_models import ListingDb
 
 
@@ -15,7 +17,9 @@ class TestRoot:
 
     route = "/listings/"
 
-    def test_create_listing(self, client, sample_book, sample_user):
+    def test_create_listing(
+        self, client: TestClient, sample_book: BookOut, sample_user: UserOut
+    ):
         """
         Test creating a listing.
 
@@ -37,7 +41,13 @@ class TestRoot:
         assert result.book.id == sample_book.id
         assert result.seller.id == sample_user.id
 
-    def test_get_all_listings(self, client, db, sample_book_list, sample_user):
+    def test_get_all_listings(
+        self,
+        client: TestClient,
+        db: Session,
+        sample_book_list: list[BookOut],
+        sample_user: UserOut,
+    ):
         """
         Test get all listings.
 
@@ -71,7 +81,7 @@ class TestListingByID:
 
     route = "/listings/{listing_id}"
 
-    def test_get_by_id(self, client, sample_listing):
+    def test_get_by_id(self, client: TestClient, sample_listing: ListingOut):
         """
         Test getting a single listing.
 
@@ -84,7 +94,7 @@ class TestListingByID:
         result = ListingOut(**response.json())
         assert result.id == sample_listing.id
 
-    def test_get_bad_id(self, client):
+    def test_get_bad_id(self, client: TestClient):
         """
         Test getting a listing with a bad id.
 
@@ -105,7 +115,7 @@ class TestListingByID:
         ],
         ids=["title", "price", "description", "sold", "listed_date"],
     )
-    def test_update(self, client, sample_listing: ListingOut, change):
+    def test_update(self, client: TestClient, sample_listing: ListingOut, change: dict):
         """
         Test update listing endpoint.
 
@@ -121,7 +131,7 @@ class TestListingByID:
         for key, value in change.items():
             assert response.json()[key] == value
 
-    def test_update_bad_id(self, client):
+    def test_update_bad_id(self, client: TestClient):
         """
         Test updating a listing with a bad id.
 
