@@ -131,3 +131,24 @@ class TestBookId:
             json={"title": "New Title"},
         )
         assert response.status_code == 404, response.json()
+
+    def test_delete_book(self, client, sample_book: BookOut):
+        """
+        Test deleting a book.
+
+        :param client:
+        :param sample_book:
+        :return:
+        """
+        response = client.delete(self.route.format(book_id=sample_book.id))
+        assert response.status_code == 204, response.json()
+
+    def test_delete_book_not_found(self, client):
+        """
+        Test deleting a book that does not exist.
+
+        :param client:
+        :return:
+        """
+        response = client.delete(self.route.format(book_id=uuid4()))
+        assert response.status_code == 404, response.json()

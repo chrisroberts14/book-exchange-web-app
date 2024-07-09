@@ -4,7 +4,7 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from starlette.status import HTTP_201_CREATED, HTTP_404_NOT_FOUND
+from starlette.status import HTTP_201_CREATED, HTTP_404_NOT_FOUND, HTTP_204_NO_CONTENT
 
 from backend.app.api_models import BookOut, BookIn, BookPatch
 from backend.app.core.db import get_db
@@ -67,3 +67,18 @@ async def update_book(
     if book is None:
         raise HTTPException(status_code=HTTP_404_NOT_FOUND, detail="Book not found")
     return BookDb.update(db, book_patch, book_id)
+
+
+@books.delete("/{book_id}", status_code=HTTP_204_NO_CONTENT)
+async def delete_book(book_id: UUID, db: Session = Depends(get_db)) -> None:
+    """
+    Delete a book.
+
+    :param book_id:
+    :param db:
+    :return:
+    """
+    book = BookDb.get_by_id(db, book_id)
+    if book is None:
+        raise HTTPException(status_code=HTTP_404_NOT_FOUND, detail="Book not found")
+    BookDb.delete(db, book_id)
