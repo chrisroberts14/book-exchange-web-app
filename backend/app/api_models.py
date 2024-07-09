@@ -23,11 +23,7 @@ class UserIn(BaseModel):
 
 
 class UserInPassword(UserIn):
-    """
-    UserInPassword is a Pydantic model that represents the.
-
-    input data for creating a new user with a password.
-    """
+    """Model that represents the input data for creating a new user with a password."""
 
     password: str
 
