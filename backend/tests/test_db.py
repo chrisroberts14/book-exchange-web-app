@@ -26,7 +26,12 @@ class TestUserDb:
         :param db:
         :return:
         """
-        user = UserDb.create(db, UserDb(username="sample_user", email="test@test.com"))
+        user = UserDb.create(
+            db,
+            UserDb(
+                username="sample_user", email="test@test.com", hashed_password="test"
+            ),
+        )
         db_user = db.get(UserDb, user.id)
         assert db_user.username == user.username
         assert db_user.email == user.email
@@ -39,7 +44,11 @@ class TestUserDb:
         :return:
         """
         users = [
-            UserDb(username=f"Test User {i}", email=f"test{i}@test.com")
+            UserDb(
+                username=f"Test User {i}",
+                email=f"test{i}@test.com",
+                hashed_password="test",
+            )
             for i in range(10)
         ]
         db.bulk_save_objects(users)

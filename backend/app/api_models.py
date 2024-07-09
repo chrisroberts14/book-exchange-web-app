@@ -22,6 +22,16 @@ class UserIn(BaseModel):
     email: str
 
 
+class UserInPassword(UserIn):
+    """
+    UserInPassword is a Pydantic model that represents the.
+
+    input data for creating a new user with a password.
+    """
+
+    password: str
+
+
 class UserPatch(BaseModel):
     """Used for update operations on users."""
 
@@ -33,6 +43,12 @@ class UserOut(UserIn):
     """UserOut is a Pydantic model that represents the output data for creating a new user."""
 
     id: UUID
+
+
+class UserInDb(UserOut):
+    """User as it is stored in the database."""
+
+    hashed_password: str
 
 
 class BookPatch(BaseModel):

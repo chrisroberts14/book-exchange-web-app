@@ -8,7 +8,9 @@ from sqlalchemy.orm import declarative_base, Session
 
 from backend.app.core.config import settings
 
-engine = create_engine(settings.DATABASE_URL)
+engine = create_engine(
+    settings.DATABASE_URL, connect_args={"check_same_thread": False}, echo=True
+)
 
 
 # Enable foreign key constraints on connection
@@ -46,8 +48,11 @@ def get_db() -> Generator[Session, None, None]:  # pragma: no cover
     savepoint = connection.begin_nested()
     try:
         yield session
+        session.commit()
+        connection.commit()
     except SQLAlchemyError as e:
         savepoint.rollback()
+        connection.rollback()
         raise e
     finally:
         session.close()

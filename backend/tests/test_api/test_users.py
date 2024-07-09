@@ -6,7 +6,7 @@ import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session
 
-from backend.app.api_models import UserIn, UserOut, BookOut, UserPatch
+from backend.app.api_models import UserOut, BookOut, UserPatch, UserInPassword
 from backend.app.db_models import UserDb
 
 
@@ -21,7 +21,9 @@ class TestUserRoot:  # pylint: disable=too-few-public-methods
 
         :return:
         """
-        user = UserIn(username="test", email="test@test.com")
+        user = UserInPassword(
+            username="test", email="test@test.com", password="password"
+        )
         response = client.post(self.route, json=user.model_dump())
         assert response.status_code == 201, response.json()
 
@@ -33,7 +35,10 @@ class TestUserRoot:  # pylint: disable=too-few-public-methods
         """
         # Create ten users then get all users and check the response
         users = [
-            UserDb(username=f"test{i}", email=f"test{i}@test.com") for i in range(10)
+            UserDb(
+                username=f"test{i}", email=f"test{i}@test.com", hashed_password="test"
+            )
+            for i in range(10)
         ]
         db.bulk_save_objects(users)
         response = client.get(self.route)

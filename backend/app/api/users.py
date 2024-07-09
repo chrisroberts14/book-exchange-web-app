@@ -7,21 +7,24 @@ from sqlalchemy.orm import Session
 from starlette.status import HTTP_201_CREATED, HTTP_404_NOT_FOUND, HTTP_204_NO_CONTENT
 
 from backend.app.db_models import UserDb
-from backend.app.api_models import UserOut, UserIn, BookOut, UserPatch
+from backend.app.api_models import UserOut, BookOut, UserPatch, UserInPassword
 from backend.app.core.db import get_db
+from backend.app.common import hash_password
 
 
 users = APIRouter()
 
 
 @users.post("/", status_code=HTTP_201_CREATED, response_model=UserOut)
-async def create_user(user: UserIn, db: Session = Depends(get_db)) -> UserOut:
+async def create_user(user: UserInPassword, db: Session = Depends(get_db)) -> UserOut:
     """
     Get all users.
 
     :return:
     """
-    return UserDb.create(db, UserDb(**user.model_dump()))
+    db_user = UserDb(**user.model_dump(exclude={"password"}))
+    db_user.hashed_password = hash_password(user.password)
+    return UserDb.create(db, db_user)
 
 
 @users.get("/", response_model=list[UserOut])

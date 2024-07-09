@@ -4,7 +4,7 @@ from datetime import date
 from uuid import uuid4, UUID
 
 from sqlalchemy import ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped, mapped_column, relationship, Session
 
 from backend.app.core.db import Base
 
@@ -88,8 +88,9 @@ class UserDb(Base, Crud):  # pylint: disable=too-few-public-methods
     __tablename__ = "users"
 
     id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid4)
-    username: Mapped[str]
+    username: Mapped[str] = mapped_column(unique=True)
     email: Mapped[str]
+    hashed_password: Mapped[str]
     books: Mapped[list["BookDb"]] = relationship(
         "BookDb", back_populates="owner", cascade="all, delete"
     )
@@ -105,6 +106,15 @@ class UserDb(Base, Crud):  # pylint: disable=too-few-public-methods
         foreign_keys="ListingDb.buyer_id",
         cascade="all, delete",
     )
+
+    @classmethod
+    def get_user_by_username(cls, db: Session, username: str):
+        """
+        Get user by username.
+
+        :return:
+        """
+        return db.query(cls).filter_by(username=username).first()
 
 
 class BookDb(Base, Crud):  # pylint: disable=too-few-public-methods

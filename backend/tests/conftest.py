@@ -8,6 +8,7 @@ from sqlalchemy import create_engine, StaticPool, event
 from sqlalchemy.orm import Session, sessionmaker
 
 from backend.app.api_models import UserOut, BookOut, ListingOut
+from backend.app.common import hash_password
 from backend.app.core.config import settings
 from backend.app.core.db import get_db, Base
 from backend.app.db_models import UserDb, BookDb, ListingDb
@@ -87,7 +88,14 @@ def sample_user(db: Session) -> UserOut:  # pylint: disable=redefined-outer-name
     :param db:
     :return:
     """
-    return UserDb.create(db, UserDb(username="sample_user", email="test@test.com"))
+    return UserDb.create(
+        db,
+        UserDb(
+            username="sample_user",
+            email="test@test.com",
+            hashed_password=hash_password("password"),
+        ),
+    )
 
 
 @pytest.fixture(scope="function")
