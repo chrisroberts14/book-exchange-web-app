@@ -110,10 +110,9 @@ class TestBookId:
         :param client:
         :return:
         """
-        patch = BookPatch(**change)
         response = client.patch(
             self.route.format(book_id=sample_book.id),
-            json=patch.model_dump(exclude_none=True),
+            json=BookPatch(**change).model_dump(exclude_none=True),
         )
         assert response.status_code == 200, response.json()
         for key, value in change.items():
