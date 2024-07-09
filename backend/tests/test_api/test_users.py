@@ -1,6 +1,8 @@
 """Module for testing the user endpoints."""
 
-from backend.app.api_models import UserIn
+from uuid import uuid4
+
+from backend.app.api_models import UserIn, UserOut
 from backend.app.db_models import UserDb
 
 
@@ -38,3 +40,32 @@ class TestUserRoot:  # pylint: disable=too-few-public-methods
         assert {user.email for user in users} == {
             user["email"] for user in response.json()
         }
+
+
+class TestUserById:
+    """Test the "/users/{user_id}" endpoint."""
+
+    route = "/users/{user_id}"
+
+    def test_get_by_id(self, client, sample_user: UserOut):
+        """
+        Test get user by id.
+
+        :param client:
+        :param sample_user:
+        :return:
+        """
+        response = client.get(self.route.format(user_id=sample_user.id))
+        result = UserOut(**response.json())
+        assert response.status_code == 200, response.json()
+        assert result.id == sample_user.id
+
+    def test_get_by_id_not_found(self, client):
+        """
+        Test get user by id not found.
+
+        :param client:
+        :return:
+        """
+        response = client.get(self.route.format(user_id=uuid4()))
+        assert response.status_code == 404, response.json()

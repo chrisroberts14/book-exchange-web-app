@@ -74,7 +74,7 @@ class TestBookId:
         Test get book by id.
 
         :param client:
-        :param db:
+        :param sample_book:
         :return:
         """
         response = client.get(self.route.format(book_id=sample_book.id))
