@@ -2,8 +2,8 @@
 
 import pytest
 
-from backend.app.api_models import UserOut, UserPatch
-from backend.app.db_models import UserDb
+from backend.app.api_models import UserOut, UserPatch, BookPatch
+from backend.app.db_models import UserDb, BookDb
 
 
 class TestUserDb:
@@ -65,9 +65,88 @@ class TestUserDb:
         :param sample_user:
         :return:
         """
-        patch = UserPatch(**change)
-        updated_user = UserDb.update(
-            db, UserPatch(**patch.model_dump()), sample_user.id
-        )
+        updated_user = UserDb.update(db, UserPatch(**change), sample_user.id)
         assert updated_user.id == sample_user.id
+        assert getattr(updated_user, list(change.keys())[0]) == list(change.values())[0]
+
+
+class TestBookDb:
+    """Class to test the book table."""
+
+    def test_create_book(self, db, sample_user):
+        """
+        Test creating a book.
+
+        :param db:
+        :return:
+        """
+        book = BookDb(
+            title="Test Book",
+            author="Test Author",
+            isbn="1234567890",
+            description="Test Description",
+            owner_id=sample_user.id,
+        )
+        db_book = BookDb.create(db, book)
+        assert db_book.title == book.title
+        assert db_book.owner.id == book.owner_id
+
+    def test_get_all_books(self, db, sample_user):
+        """
+        Test getting all books.
+
+        :param db:
+        :param sample_user:
+        :return:
+        """
+        books = [
+            BookDb(
+                title=f"Test Book {i}",
+                author=f"Test Author {i}",
+                isbn=f"1234567890 {i}",
+                description=f"Test Description {i}",
+                owner_id=sample_user.id,
+            )
+            for i in range(10)
+        ]
+        db.bulk_save_objects(books)
+        db_books = BookDb.get_all(db)
+        assert all(
+            db_book.title in [book.title for book in books] for db_book in db_books
+        )
+        assert all(db_book.owner.id == sample_user.id for db_book in db_books)
+
+    def test_get_book_by_id(self, db, sample_book):
+        """
+        Test getting a book by id.
+
+        :param db:
+        :param sample_book:
+        :return:
+        """
+        db_book = BookDb.get_by_id(db, sample_book.id)
+        assert db_book.id == sample_book.id
+        assert db_book.title == sample_book.title
+        assert db_book.owner.id == sample_book.owner.id
+
+    @pytest.mark.parametrize(
+        "change",
+        [
+            {"title": "New Title"},
+            {"author": "New Author"},
+            {"isbn": "1234567890"},
+            {"description": "New Description"},
+        ],
+        ids=["title", "author", "isbn", "description"],
+    )
+    def test_update_book(self, db, sample_book, change):
+        """
+        Test updating a book.
+
+        :param db:
+        :param sample_book:
+        :return:
+        """
+        updated_user = BookDb.update(db, BookPatch(**change), sample_book.id)
+        assert updated_user.id == sample_book.id
         assert getattr(updated_user, list(change.keys())[0]) == list(change.values())[0]
