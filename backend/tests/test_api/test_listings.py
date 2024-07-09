@@ -2,7 +2,7 @@
 
 from starlette.status import HTTP_201_CREATED
 
-from backend.app.api_models import ListingIn, ListingOut
+from backend.app.api_models import ListingOut
 from backend.app.db_models import ListingDb
 
 
@@ -20,16 +20,16 @@ class TestRoot:
         :param sample_user:
         :return:
         """
-        data = ListingIn(
-            title="Test Listing",
-            book_id=sample_book.id,
-            seller_id=sample_user.id,
-            price=10.0,
-        )
-        response = client.post(self.route, json=data.model_dump(mode="json"))
+        data = {
+            "title": "Test Listing",
+            "book_id": str(sample_book.id),
+            "seller_id": str(sample_user.id),
+            "price": 10.0,
+        }
+        response = client.post(self.route, json=data)
         assert response.status_code == HTTP_201_CREATED, response.json()
         result = ListingOut(**response.json())
-        assert result.title == data.title
+        assert result.title == data["title"]
         assert result.book.id == sample_book.id
         assert result.seller.id == sample_user.id
 

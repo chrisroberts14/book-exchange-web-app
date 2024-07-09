@@ -20,22 +20,23 @@ class TestRoot:
         :param client:
         :return:
         """
-        book = BookIn(
-            title="Test Book",
-            author="Test Author",
-            isbn="1234567890",
-            description="Test Description",
-            owner_id=sample_user.id,
-        )
+        book = {
+            "title": "Test Book",
+            "author": "Test Author",
+            "isbn": "1234567890",
+            "description": "Test Description",
+            "owner_id": str(sample_user.id),
+        }
         response = client.post(
             self.route,
-            json=book.model_dump(mode="json"),
+            json=book,
         )
         assert response.status_code == 201, response.json()
         # Check the response data
+        data = BookIn(**book)
         result = BookOut(**response.json())
-        assert book.title == result.title
-        assert result.owner.id == book.owner_id
+        assert data.title == result.title
+        assert result.owner.id == data.owner_id
 
     def test_get_all_books(self, client, db, sample_user):
         """
