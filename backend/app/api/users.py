@@ -19,8 +19,7 @@ async def create_user(user: UserIn, db: Session = Depends(get_db)) -> UserOut:
 
     :return:
     """
-    db_user = UserDb(username=user.username, email=user.email)
-    return UserDb.create(db, db_user)
+    return UserDb.create(db, UserDb(**user.model_dump()))
 
 
 @users.get("/", response_model=list[UserOut])

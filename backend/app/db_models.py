@@ -20,8 +20,9 @@ class Crud:  # pylint: disable=too-few-public-methods
         :param db: database session
         :return: created object
         """
-        with db.begin_nested():
-            db.add(obj)
+        db.add(obj)
+        db.commit()
+        db.refresh(obj)
         return obj
 
     @classmethod
