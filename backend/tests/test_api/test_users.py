@@ -5,6 +5,7 @@ from uuid import uuid4
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session
+from starlette.status import HTTP_404_NOT_FOUND, HTTP_403_FORBIDDEN
 
 from backend.app.api_models import UserOut, BookOut, UserPatch, UserInPassword
 from backend.app.db_models import UserDb
@@ -110,7 +111,7 @@ class TestUserById:
         assert result.id == sample_user.id
         assert getattr(result, list(change.keys())[0]) == list(change.values())[0]
 
-    def test_update_user_bad(self, client: TestClient):
+    def test_update_user_bad(self, client: TestClient, current_user_override):  # pylint: disable=unused-argument
         """
         Test attempting to update a user that doesn't exist raises a 404.
 
@@ -121,7 +122,33 @@ class TestUserById:
             self.route.format(user_id=uuid4()),
             json=UserPatch(username="new_username").model_dump(),
         )
-        assert response.status_code == 401, response.json()
+        assert response.status_code == HTTP_404_NOT_FOUND, response.json()
+
+    def test_update_user_not_logged_in(
+        self, client: TestClient, db: Session, current_user_override
+    ):  # pylint: disable=unused-argument
+        """
+        Test attempting to update a user without being logged in raises a 403.
+
+        :param client:
+        :param db:
+        :param current_user_override:
+        :return:
+        """
+        # Create a second user
+        user = UserDb.create(
+            db,
+            UserDb(
+                username="test2",
+                email="test@test.com",
+                hashed_password="test",
+            ),
+        )
+        response = client.patch(
+            self.route.format(user_id=user.id),
+            json=UserPatch(username="new_username").model_dump(),
+        )
+        assert response.status_code == HTTP_403_FORBIDDEN, response.json()
 
     def test_user_delete(self, client: TestClient, sample_user: UserOut):
         """
