@@ -10,10 +10,17 @@ from backend.app.api.listings import listings
 from backend.app.api.token import token, oauth2_scheme
 
 
-app = FastAPI(dependencies=[Depends(oauth2_scheme)])
+app = FastAPI()
 app.include_router(users, prefix="/users", tags=["users"])
-app.include_router(books, prefix="/books", tags=["books"])
-app.include_router(listings, prefix="/listings", tags=["listings"])
+app.include_router(
+    books, prefix="/books", tags=["books"], dependencies=[Depends(oauth2_scheme)]
+)
+app.include_router(
+    listings,
+    prefix="/listings",
+    tags=["listings"],
+    dependencies=[Depends(oauth2_scheme)],
+)
 app.include_router(token, prefix="/token", tags=["token"])
 
 app.add_middleware(

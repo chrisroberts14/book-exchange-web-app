@@ -4,8 +4,14 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from starlette.status import HTTP_201_CREATED, HTTP_404_NOT_FOUND, HTTP_204_NO_CONTENT
+from starlette.status import (
+    HTTP_201_CREATED,
+    HTTP_404_NOT_FOUND,
+    HTTP_204_NO_CONTENT,
+    HTTP_403_FORBIDDEN,
+)
 
+from backend.app.api.token import get_current_user
 from backend.app.db_models import UserDb
 from backend.app.api_models import UserOut, BookOut, UserPatch, UserInPassword
 from backend.app.core.db import get_db
@@ -71,19 +77,25 @@ async def get_users_books(
 
 @users.patch("/{user_id}", response_model=UserOut)
 async def update_user(
-    user_id: UUID, user_patch: UserPatch, db: Session = Depends(get_db)
+    user_id: UUID,
+    user_patch: UserPatch,
+    db: Session = Depends(get_db),
+    current_user: UserOut = Depends(get_current_user),
 ) -> UserOut:
     """
     Update a user in the database.
 
+    :param current_user:
     :param user_id:
     :param user_patch:
     :param db:
     :return:
     """
-    user = UserDb.get_by_id(db, user_id)
-    if user is None:
-        raise HTTPException(status_code=HTTP_404_NOT_FOUND, detail="User not found")
+    if current_user.id != user_id:
+        raise HTTPException(
+            status_code=HTTP_403_FORBIDDEN,
+            detail="User can only update their own account",
+        )
     return UserDb.update(db, user_patch, user_id)
 
 

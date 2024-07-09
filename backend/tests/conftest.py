@@ -83,18 +83,6 @@ def client(auth_token) -> Generator[TestClient, None, None]:  # pylint: disable=
 
 
 @pytest.fixture(scope="session")
-def un_auth_client() -> Generator[TestClient, None, None]:
-    """
-    Fixture for the test client with not authorization.
-
-    :return:
-    """
-    app.dependency_overrides[get_db] = override_get_db
-    with TestClient(app) as test_client:
-        yield test_client
-
-
-@pytest.fixture(scope="session")
 def auth_token() -> str:
     """
     Fixture for the auth token.

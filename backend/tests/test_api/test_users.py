@@ -6,6 +6,8 @@ import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session
 
+from backend.app import app
+from backend.app.api.token import get_current_user
 from backend.app.api_models import UserOut, BookOut, UserPatch, UserInPassword
 from backend.app.db_models import UserDb
 
@@ -87,7 +89,12 @@ class TestUserById:
         ],
         ids=["change username", "change email"],
     )
-    def test_update_user(self, client: TestClient, sample_user: UserOut, change: dict):
+    def test_update_user(
+        self,
+        client: TestClient,
+        sample_user: UserOut,
+        change: dict,
+    ):
         """
         Test update user.
 
@@ -95,6 +102,11 @@ class TestUserById:
         :param sample_user:
         :return:
         """
+
+        def get_sample_user():
+            yield sample_user
+
+        app.dependency_overrides[get_current_user] = get_sample_user
         response = client.patch(
             self.route.format(user_id=sample_user.id),
             json=UserPatch(**change).model_dump(),
@@ -115,7 +127,7 @@ class TestUserById:
             self.route.format(user_id=uuid4()),
             json=UserPatch(username="new_username").model_dump(),
         )
-        assert response.status_code == 404, response.json()
+        assert response.status_code == 401, response.json()
 
     def test_user_delete(self, client: TestClient, sample_user: UserOut):
         """
