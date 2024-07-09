@@ -110,6 +110,25 @@ class TestUserById:
         )
         assert response.status_code == 404, response.json()
 
+    def test_user_delete(self, client, sample_user):
+        """
+        Test deleting a user works.
+
+        :return:
+        """
+        response = client.delete(self.route.format(user_id=sample_user.id))
+        assert response.status_code == 204, response.json()
+
+    def test_user_delete_bad(self, client):
+        """
+        Test attempting to delete a user that doesn't exist raises a 404.
+
+        :param client:
+        :return:
+        """
+        response = client.delete(self.route.format(user_id=uuid4()))
+        assert response.status_code == 404, response.json()
+
 
 class TestUserBooks:
     """Tests to test the "/users/{user_id}/books" endpoint."""
