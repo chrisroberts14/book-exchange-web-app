@@ -68,6 +68,19 @@ class Crud:  # pylint: disable=too-few-public-methods
         db.commit()
         return db.get(cls, id_)
 
+    @classmethod
+    def delete(cls, db, id_):
+        """
+        Delete an object.
+
+        :param db: database session
+        :param id_: id of the object
+        :return: None
+        """
+        db_obj = db.get(cls, id_)
+        db.delete(db_obj)
+        db.commit()
+
 
 class UserDb(Base, Crud):  # pylint: disable=too-few-public-methods
     """User database table."""
@@ -77,12 +90,20 @@ class UserDb(Base, Crud):  # pylint: disable=too-few-public-methods
     id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid4)
     username: Mapped[str]
     email: Mapped[str]
-    books: Mapped[list["BookDb"]] = relationship("BookDb", back_populates="owner")
+    books: Mapped[list["BookDb"]] = relationship(
+        "BookDb", back_populates="owner", cascade="all, delete"
+    )
     listings: Mapped[list["ListingDb"]] = relationship(
-        "ListingDb", back_populates="seller", foreign_keys="ListingDb.seller_id"
+        "ListingDb",
+        back_populates="seller",
+        foreign_keys="ListingDb.seller_id",
+        cascade="all, delete",
     )
     purchases: Mapped[list["ListingDb"]] = relationship(
-        "ListingDb", back_populates="buyer", foreign_keys="ListingDb.buyer_id"
+        "ListingDb",
+        back_populates="buyer",
+        foreign_keys="ListingDb.buyer_id",
+        cascade="all, delete",
     )
 
 
@@ -101,7 +122,7 @@ class BookDb(Base, Crud):  # pylint: disable=too-few-public-methods
         "UserDb", back_populates="books", foreign_keys=[owner_id]
     )
     listing: Mapped["ListingDb"] = relationship(
-        "ListingDb", back_populates="book", uselist=False
+        "ListingDb", back_populates="book", uselist=False, cascade="all, delete"
     )
 
 

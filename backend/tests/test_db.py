@@ -4,7 +4,14 @@ from datetime import timedelta, date
 
 import pytest
 
-from backend.app.api_models import UserOut, UserPatch, BookPatch, ListingPatch
+from backend.app.api_models import (
+    UserOut,
+    UserPatch,
+    BookPatch,
+    ListingPatch,
+    BookOut,
+    ListingOut,
+)
 from backend.app.db_models import UserDb, BookDb, ListingDb
 
 
@@ -70,6 +77,32 @@ class TestUserDb:
         updated_user = UserDb.update(db, UserPatch(**change), sample_user.id)
         assert updated_user.id == sample_user.id
         assert getattr(updated_user, list(change.keys())[0]) == list(change.values())[0]
+
+    def test_delete_user(self, db, sample_user: UserOut):
+        """
+        Test delete user.
+
+        :param db:
+        :param sample_user:
+        :return:
+        """
+        UserDb.delete(db, sample_user.id)
+        assert UserDb.get_by_id(db, sample_user.id) is None
+
+    def test_delete_user_cascade(self, db, sample_user: UserOut, sample_listing):
+        """
+        Test delete user cascade deletes both owned books and listings.
+
+        .
+        :param db:
+        :param sample_user:
+        :param sample_listing:
+        :return:
+        """
+        UserDb.delete(db, sample_user.id)
+        assert UserDb.get_by_id(db, sample_user.id) is None
+        assert BookDb.get_by_id(db, sample_listing.book_id) is None
+        assert ListingDb.get_by_id(db, sample_listing.id) is None
 
 
 class TestBookDb:
@@ -152,6 +185,31 @@ class TestBookDb:
         updated_user = BookDb.update(db, BookPatch(**change), sample_book.id)
         assert updated_user.id == sample_book.id
         assert getattr(updated_user, list(change.keys())[0]) == list(change.values())[0]
+
+    def test_delete_book(self, db, sample_book: BookOut):
+        """
+        Test delete book.
+
+        :param db:
+        :param sample_book:
+        :return:
+        """
+        BookDb.delete(db, sample_book.id)
+        assert BookDb.get_by_id(db, sample_book.id) is None
+
+    def test_delete_book_cascade(self, db, sample_book: BookOut, sample_listing):
+        """
+        Test delete book cascade deletes listings.
+
+        .
+        :param db:
+        :param sample_book:
+        :param sample_listing:
+        :return:
+        """
+        BookDb.delete(db, sample_book.id)
+        assert BookDb.get_by_id(db, sample_listing.book_id) is None
+        assert ListingDb.get_by_id(db, sample_listing.id) is None
 
 
 class TestListingDb:
@@ -236,3 +294,14 @@ class TestListingDb:
         assert (
             getattr(updated_listing, list(change.keys())[0]) == list(change.values())[0]
         )
+
+    def test_delete_listing(self, db, sample_listing: ListingOut):
+        """
+        Test delete listing.
+
+        :param db:
+        :param sample_listing:
+        :return:
+        """
+        ListingDb.delete(db, sample_listing.id)
+        assert ListingDb.get_by_id(db, sample_listing.id) is None
