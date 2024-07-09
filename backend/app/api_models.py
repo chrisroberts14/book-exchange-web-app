@@ -21,6 +21,13 @@ class UserIn(BaseModel):
     email: str
 
 
+class UserPatch(BaseModel):
+    """Used for update operations on users."""
+
+    username: str | None = None
+    email: str | None = None
+
+
 class UserOut(UserIn):
     """UserOut is a Pydantic model that represents the output data for creating a new user."""
 

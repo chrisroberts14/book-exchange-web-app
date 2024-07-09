@@ -63,4 +63,7 @@ async def update_book(
     :param db:
     :return:
     """
+    book = BookDb.get_by_id(db, book_id)
+    if book is None:
+        raise HTTPException(status_code=HTTP_404_NOT_FOUND, detail="Book not found")
     return BookDb.update(db, book_patch, book_id)

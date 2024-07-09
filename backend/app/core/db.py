@@ -12,7 +12,7 @@ engine = create_engine(settings.DATABASE_URL)
 
 
 # Enable foreign key constraints on connection
-def _enable_foreign_keys(dbapi_connection, _):
+def _enable_foreign_keys(dbapi_connection, _):  # pragma: no cover
     cursor = dbapi_connection.cursor()
     cursor.execute("PRAGMA foreign_keys=ON")
     cursor.close()

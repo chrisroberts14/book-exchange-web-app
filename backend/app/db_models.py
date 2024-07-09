@@ -59,8 +59,6 @@ class Crud:  # pylint: disable=too-few-public-methods
         :return:
         """
         db_obj = db.query(cls).filter(cls.id == id_).first()
-        if db_obj is None:
-            return None  # or raise an exception
 
         for key, value in obj.model_dump().items():
             if value is not None:
