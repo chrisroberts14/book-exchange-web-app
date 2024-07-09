@@ -7,7 +7,7 @@ from fastapi.testclient import TestClient
 from sqlalchemy import create_engine, StaticPool, event
 from sqlalchemy.orm import Session, sessionmaker
 
-from backend.app.api.token import create_access_token
+from backend.app.api.token import create_access_token, get_current_user
 from backend.app.api_models import UserOut, BookOut, ListingOut
 from backend.app.common import hash_password
 from backend.app.core.config import settings
@@ -67,6 +67,23 @@ def db() -> Session:  # pylint: disable=redefined-outer-name
             yield session
         finally:
             session.rollback()
+
+
+@pytest.fixture(scope="function")
+def current_user_override(sample_user):  # pylint: disable=redefined-outer-name
+    """
+    Override the get_current_user dependency.
+
+    :param sample_user:
+    :return:
+    """
+
+    def get_sample_user():
+        yield sample_user
+
+    app.dependency_overrides[get_current_user] = get_sample_user
+    yield
+    app.dependency_overrides[get_current_user] = get_current_user
 
 
 @pytest.fixture(scope="session")
