@@ -4,7 +4,7 @@ from uuid import uuid4
 
 import pytest
 
-from backend.app.api_models import BookIn, UserOut, BookOut
+from backend.app.api_models import BookIn, UserOut, BookOut, BookPatch
 from backend.app.db_models import BookDb
 
 
@@ -110,9 +110,10 @@ class TestBookId:
         :param client:
         :return:
         """
+        patch = BookPatch(**change)
         response = client.patch(
             self.route.format(book_id=sample_book.id),
-            json=change,
+            json=patch.model_dump(exclude_none=True),
         )
         assert response.status_code == 200, response.json()
         for key, value in change.items():

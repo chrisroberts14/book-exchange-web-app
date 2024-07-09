@@ -11,6 +11,8 @@ from backend.app.core.db import Base
 class Crud:  # pylint: disable=too-few-public-methods
     """Base class for CRUD operations."""
 
+    id = None
+
     @classmethod
     def create(cls, db, obj):
         """
@@ -44,6 +46,27 @@ class Crud:  # pylint: disable=too-few-public-methods
         :param id_: id of the object
         :return: object
         """
+        return db.get(cls, id_)
+
+    @classmethod
+    def update(cls, db, obj, id_):
+        """
+        Update an object.
+
+        :param db:
+        :param obj:
+        :param id_:
+        :return:
+        """
+        db_obj = db.query(cls).filter(cls.id == id_).first()
+        if db_obj is None:
+            return None  # or raise an exception
+
+        for key, value in obj.model_dump().items():
+            if value is not None:
+                setattr(db_obj, key, value)
+
+        db.commit()
         return db.get(cls, id_)
 
 

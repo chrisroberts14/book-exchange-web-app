@@ -27,16 +27,22 @@ class UserOut(UserIn):
     id: UUID
 
 
+class BookPatch(BaseModel):
+    """Used for update operations on books."""
+
+    title: str | None = None
+    author: str | None = None
+    isbn: str | None = None
+    description: str | None = None
+
+
 class BookBase(BaseModel):
-    """Base model for book types.
+    """Base model for book types."""
 
-    Also used for update operations.
-    """
-
-    title: str
-    author: str
-    isbn: str
-    description: str = "No description provided."
+    title: str | None
+    author: str | None
+    isbn: str | None
+    description: str | None = "No description provided."
 
 
 class BookIn(BookBase):

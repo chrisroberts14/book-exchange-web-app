@@ -6,7 +6,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from starlette.status import HTTP_201_CREATED, HTTP_404_NOT_FOUND
 
-from backend.app.api_models import BookOut, BookIn
+from backend.app.api_models import BookOut, BookIn, BookPatch
 from backend.app.core.db import get_db
 from backend.app.db_models import BookDb
 
@@ -49,3 +49,18 @@ async def get_book(book_id: UUID, db: Session = Depends(get_db)) -> BookOut:
     if book is None:
         raise HTTPException(status_code=HTTP_404_NOT_FOUND, detail="Book not found")
     return book
+
+
+@books.patch("/{book_id}")
+async def update_book(
+    book_id: UUID, book_patch: BookPatch, db: Session = Depends(get_db)
+) -> BookOut:
+    """
+    Update a book.
+
+    :param book_id:
+    :param book_patch:
+    :param db:
+    :return:
+    """
+    return BookDb.update(db, book_patch, book_id)
