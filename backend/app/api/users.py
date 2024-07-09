@@ -97,4 +97,3 @@ async def delete_user(user_id: UUID, db: Session = Depends(get_db)) -> None:
     if user is None:
         raise HTTPException(status_code=HTTP_404_NOT_FOUND, detail="User not found")
     UserDb.delete(db, user_id)
-    db.commit()
