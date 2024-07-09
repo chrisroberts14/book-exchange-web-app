@@ -2,7 +2,7 @@
 
 from uuid import uuid4
 
-from backend.app.api_models import UserIn, UserOut
+from backend.app.api_models import UserIn, UserOut, BookOut
 from backend.app.db_models import UserDb
 
 
@@ -68,4 +68,33 @@ class TestUserById:
         :return:
         """
         response = client.get(self.route.format(user_id=uuid4()))
+        assert response.status_code == 404, response.json()
+
+
+class TestUserBooks:
+    """Tests to test the "/users/{user_id}/books" endpoint."""
+
+    def test_get_users_books(self, client, sample_user: UserOut, sample_book: BookOut):
+        """
+        Test get user's books.
+
+        :param client:
+        :param sample_user:
+        :return:
+        """
+        response = client.get(f"/users/{sample_user.id}/books")
+        assert response.status_code == 200, response.json()
+        for book_json in response.json():
+            book = BookOut(**book_json)
+            assert book.owner.id == sample_user.id
+            assert book.id == sample_book.id
+
+    def test_get_users_books_not_found(self, client):
+        """
+        Test get user's books not found.
+
+        :param client:
+        :return:
+        """
+        response = client.get(f"/users/{uuid4()}/books")
         assert response.status_code == 404, response.json()

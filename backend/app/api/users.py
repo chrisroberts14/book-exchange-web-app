@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 from starlette.status import HTTP_201_CREATED, HTTP_404_NOT_FOUND
 
 from backend.app.db_models import UserDb
-from backend.app.api_models import UserOut, UserIn
+from backend.app.api_models import UserOut, UserIn, BookOut
 from backend.app.core.db import get_db
 
 
@@ -47,3 +47,20 @@ async def get_user(user_id: UUID, db: Session = Depends(get_db)) -> UserOut:
     if db_user is None:
         raise HTTPException(status_code=HTTP_404_NOT_FOUND, detail="User not found")
     return db_user
+
+
+@users.get("/{user_id}/books", response_model=list[BookOut])
+async def get_users_books(
+    user_id: UUID, db: Session = Depends(get_db)
+) -> list[BookOut]:
+    """
+    Get all books for a user.
+
+    :param user_id:
+    :param db:
+    :return:
+    """
+    user = UserDb.get_by_id(db, user_id)
+    if user is None:
+        raise HTTPException(status_code=HTTP_404_NOT_FOUND, detail="User not found")
+    return user.books
