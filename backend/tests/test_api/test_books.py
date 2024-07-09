@@ -3,6 +3,8 @@
 from uuid import uuid4
 
 import pytest
+from fastapi.testclient import TestClient
+from sqlalchemy.orm import Session
 
 from backend.app.api_models import BookIn, UserOut, BookOut, BookPatch
 from backend.app.db_models import BookDb
@@ -13,7 +15,7 @@ class TestRoot:
 
     route = "/books/"
 
-    def test_create_book(self, client, sample_user: UserOut):
+    def test_create_book(self, client: TestClient, sample_user: UserOut):
         """
         Test create book.
 
@@ -38,7 +40,7 @@ class TestRoot:
         assert data.title == result.title
         assert result.owner.id == data.owner_id
 
-    def test_get_all_books(self, client, db, sample_user):
+    def test_get_all_books(self, client: TestClient, db: Session, sample_user: UserOut):
         """
         Test get all books.
 
@@ -70,7 +72,7 @@ class TestBookId:
 
     route = "/books/{book_id}"
 
-    def test_get_by_id(self, client, sample_book: BookOut):
+    def test_get_by_id(self, client: TestClient, sample_book: BookOut):
         """
         Test get book by id.
 
@@ -84,7 +86,7 @@ class TestBookId:
         assert result.id == sample_book.id
         assert result.owner.id == sample_book.owner.id
 
-    def test_get_by_id_not_found(self, client):
+    def test_get_by_id_not_found(self, client: TestClient):
         """
         Test get book by id not found.
 
@@ -104,7 +106,7 @@ class TestBookId:
         ],
         ids=["title", "author", "isbn", "description"],
     )
-    def test_update_book(self, client, sample_book: BookOut, change):
+    def test_update_book(self, client: TestClient, sample_book: BookOut, change: dict):
         """
         Test a patch of a book.
 
@@ -119,7 +121,7 @@ class TestBookId:
         for key, value in change.items():
             assert response.json()[key] == value
 
-    def test_update_bad_book(self, client):
+    def test_update_bad_book(self, client: TestClient):
         """
         Test attempting to update a bad book results in a 404.
 
@@ -132,7 +134,7 @@ class TestBookId:
         )
         assert response.status_code == 404, response.json()
 
-    def test_delete_book(self, client, sample_book: BookOut):
+    def test_delete_book(self, client: TestClient, sample_book: BookOut):
         """
         Test deleting a book.
 
@@ -143,7 +145,7 @@ class TestBookId:
         response = client.delete(self.route.format(book_id=sample_book.id))
         assert response.status_code == 204, response.json()
 
-    def test_delete_book_not_found(self, client):
+    def test_delete_book_not_found(self, client: TestClient):
         """
         Test deleting a book that does not exist.
 
