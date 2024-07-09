@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 from starlette.status import HTTP_201_CREATED, HTTP_404_NOT_FOUND
 
 from backend.app.db_models import UserDb
-from backend.app.api_models import UserOut, UserIn, BookOut
+from backend.app.api_models import UserOut, UserIn, BookOut, UserPatch
 from backend.app.core.db import get_db
 
 
@@ -64,3 +64,21 @@ async def get_users_books(
     if user is None:
         raise HTTPException(status_code=HTTP_404_NOT_FOUND, detail="User not found")
     return user.books
+
+
+@users.patch("/{user_id}", response_model=UserOut)
+async def update_user(
+    user_id: UUID, user_patch: UserPatch, db: Session = Depends(get_db)
+) -> UserOut:
+    """
+    Update a user in the database.
+
+    :param user_id:
+    :param user_patch:
+    :param db:
+    :return:
+    """
+    user = UserDb.get_by_id(db, user_id)
+    if user is None:
+        raise HTTPException(status_code=HTTP_404_NOT_FOUND, detail="User not found")
+    return UserDb.update(db, user_patch, user_id)

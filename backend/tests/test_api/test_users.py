@@ -2,7 +2,9 @@
 
 from uuid import uuid4
 
-from backend.app.api_models import UserIn, UserOut, BookOut
+import pytest
+
+from backend.app.api_models import UserIn, UserOut, BookOut, UserPatch
 from backend.app.db_models import UserDb
 
 
@@ -68,6 +70,44 @@ class TestUserById:
         :return:
         """
         response = client.get(self.route.format(user_id=uuid4()))
+        assert response.status_code == 404, response.json()
+
+    @pytest.mark.parametrize(
+        "change",
+        [
+            {"username": "new_username"},
+            {"email": "new@test.com"},
+        ],
+        ids=["change username", "change email"],
+    )
+    def test_update_user(self, client, sample_user: UserOut, change: dict):
+        """
+        Test update user.
+
+        :param client:
+        :param sample_user:
+        :return:
+        """
+        response = client.patch(
+            self.route.format(user_id=sample_user.id),
+            json=UserPatch(**change).model_dump(),
+        )
+        assert response.status_code == 200, response.json()
+        result = UserOut(**response.json())
+        assert result.id == sample_user.id
+        assert getattr(result, list(change.keys())[0]) == list(change.values())[0]
+
+    def test_update_user_bad(self, client):
+        """
+        Test attempting to update a user that doesn't exist raises a 404.
+
+        :param client:
+        :return:
+        """
+        response = client.patch(
+            self.route.format(user_id=uuid4()),
+            json=UserPatch(username="new_username").model_dump(),
+        )
         assert response.status_code == 404, response.json()
 
 
