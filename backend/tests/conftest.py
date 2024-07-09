@@ -7,6 +7,7 @@ from fastapi.testclient import TestClient
 from sqlalchemy import create_engine, StaticPool, event
 from sqlalchemy.orm import Session, sessionmaker
 
+from backend.app.api.token import create_access_token
 from backend.app.api_models import UserOut, BookOut, ListingOut
 from backend.app.common import hash_password
 from backend.app.core.config import settings
@@ -68,8 +69,8 @@ def db() -> Session:  # pylint: disable=redefined-outer-name
             session.rollback()
 
 
-@pytest.fixture(scope="module")
-def client() -> Generator[TestClient, None, None]:  # pylint: disable=redefined-outer-name
+@pytest.fixture(scope="session")
+def client(auth_token) -> Generator[TestClient, None, None]:  # pylint: disable=redefined-outer-name
     """
     Fixture for the test client.
 
@@ -77,7 +78,30 @@ def client() -> Generator[TestClient, None, None]:  # pylint: disable=redefined-
     """
     app.dependency_overrides[get_db] = override_get_db
     with TestClient(app) as test_client:
+        test_client.headers.update({"Authorization": f"Bearer {auth_token}"})
         yield test_client
+
+
+@pytest.fixture(scope="session")
+def un_auth_client() -> Generator[TestClient, None, None]:
+    """
+    Fixture for the test client with not authorization.
+
+    :return:
+    """
+    app.dependency_overrides[get_db] = override_get_db
+    with TestClient(app) as test_client:
+        yield test_client
+
+
+@pytest.fixture(scope="session")
+def auth_token() -> str:
+    """
+    Fixture for the auth token.
+
+    :return:
+    """
+    return create_access_token({"sub": "test_user"})
 
 
 @pytest.fixture(scope="function")

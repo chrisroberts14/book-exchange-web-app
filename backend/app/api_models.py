@@ -15,6 +15,19 @@ class BaseModel(PydanticBaseModel):
     )
 
 
+class Token(BaseModel):
+    """Token model."""
+
+    access_token: str
+    token_type: str
+
+
+class TokenData(BaseModel):
+    """Token data model."""
+
+    username: str | None = None
+
+
 class UserIn(BaseModel):
     """UserIn is a Pydantic model that represents the input data for creating a new user."""
 
