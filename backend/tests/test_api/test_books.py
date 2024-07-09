@@ -118,3 +118,16 @@ class TestBookId:
         assert response.status_code == 200, response.json()
         for key, value in change.items():
             assert response.json()[key] == value
+
+    def test_update_bad_book(self, client):
+        """
+        Test attempting to update a bad book results in a 404.
+
+        :param client:
+        :return:
+        """
+        response = client.patch(
+            self.route.format(book_id=uuid4()),
+            json={"title": "New Title"},
+        )
+        assert response.status_code == 404, response.json()
