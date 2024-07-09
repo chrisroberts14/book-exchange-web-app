@@ -2,6 +2,8 @@
 
 from uuid import uuid4
 
+import pytest
+
 from backend.app.api_models import BookIn, UserOut, BookOut
 from backend.app.db_models import BookDb
 
@@ -90,3 +92,28 @@ class TestBookId:
         """
         response = client.get(self.route.format(book_id=uuid4()))
         assert response.status_code == 404, response.json()
+
+    @pytest.mark.parametrize(
+        "change",
+        [
+            {"title": "New Title"},
+            {"author": "New Author"},
+            {"isbn": "1234567890"},
+            {"description": "New Description"},
+        ],
+        ids=["title", "author", "isbn", "description"],
+    )
+    def test_update_book(self, client, sample_book: BookOut, change):
+        """
+        Test a patch of a book.
+
+        :param client:
+        :return:
+        """
+        response = client.patch(
+            self.route.format(book_id=sample_book.id),
+            json=change,
+        )
+        assert response.status_code == 200, response.json()
+        for key, value in change.items():
+            assert response.json()[key] == value

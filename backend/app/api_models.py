@@ -28,7 +28,10 @@ class UserOut(UserIn):
 
 
 class BookBase(BaseModel):
-    """Base model for book types."""
+    """Base model for book types.
+
+    Also used for update operations.
+    """
 
     title: str
     author: str
