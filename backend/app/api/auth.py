@@ -16,9 +16,9 @@ from backend.app.core.config import settings
 from backend.app.core.db import get_db
 from backend.app.db_models import UserDb
 
-token = APIRouter()
+auth = APIRouter()
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token/token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/token")
 
 
 def verify_password(plain_password: str, hashed_password: str):
@@ -109,7 +109,7 @@ def create_access_token(
     return encoded_jwt
 
 
-@token.post("/token")
+@auth.post("/login")
 async def login(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
     db: Session = Depends(get_db),
@@ -135,7 +135,7 @@ async def login(
     return Token(access_token=access_token, token_type="bearer")
 
 
-@token.get("/me", response_model=UserOut)
+@auth.get("/me", response_model=UserOut)
 async def get_me(
     current_user: Annotated[UserOut, Depends(get_current_user)],
 ) -> UserOut:

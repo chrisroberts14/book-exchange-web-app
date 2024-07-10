@@ -7,7 +7,7 @@ from fastapi.testclient import TestClient
 from sqlalchemy import create_engine, StaticPool, event
 from sqlalchemy.orm import Session, sessionmaker
 
-from backend.app.api.token import create_access_token, get_current_user
+from backend.app.api.auth import create_access_token, get_current_user
 from backend.app.api_models import UserOut, BookOut, ListingOut
 from backend.app.common import hash_password
 from backend.app.core.config import settings

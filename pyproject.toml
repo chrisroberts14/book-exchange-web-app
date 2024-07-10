@@ -8,7 +8,7 @@ authors = [
 ]
 
 [tool.pytest.ini_options]
-addopts = "--cov-report term-missing --cov=. --cov-fail-under=99 -n auto"
+addopts = "--cov-report term-missing --cov=. --cov-fail-under=99"
 
 [tool.coverage.run]
 omit = [

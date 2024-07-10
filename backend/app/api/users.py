@@ -11,7 +11,7 @@ from starlette.status import (
     HTTP_403_FORBIDDEN,
 )
 
-from backend.app.api.token import get_current_user
+from backend.app.api.auth import get_current_user
 from backend.app.db_models import UserDb
 from backend.app.api_models import UserOut, BookOut, UserPatch, UserInPassword
 from backend.app.core.db import get_db

@@ -10,13 +10,13 @@ from fastapi.testclient import TestClient
 from starlette.status import HTTP_401_UNAUTHORIZED
 
 from backend.app.api_models import UserOut
-from backend.app.api.token import create_access_token
+from backend.app.api.auth import create_access_token
 
 
 class TestLogin:
-    """Test the login at endpoint "/token/token"."""
+    """Test the login at endpoint "/auth/login"."""
 
-    route = "/token/token"
+    route = "/auth/login"
 
     def test_login_good(self, client: TestClient, sample_user: UserOut):
         """
@@ -56,7 +56,7 @@ class TestLogin:
 class TestCurrentUser:  # pylint: disable=too-few-public-methods
     """Test get current user."""
 
-    route = "/token/me"
+    route = "/auth/me"
 
     def test_get_current_user(self, client: TestClient, sample_user: UserOut):
         """
