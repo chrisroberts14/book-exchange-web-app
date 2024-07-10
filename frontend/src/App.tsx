@@ -7,7 +7,7 @@ const App = () => {
   const [user, setUser] = useState(null);
 
   return (
-    <LoginForm username={username} setUsername={setUsername} password={password} setPassword={setPassword} setUser={setUser} />
+    <LoginForm username={username} setUsername={setUsername} password={password} setPassword={setPassword} user={user} setUser={setUser} />
   )
 }
 

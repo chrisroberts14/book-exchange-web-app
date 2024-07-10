@@ -6,18 +6,20 @@ type LoginFormProps = {
     setUsername: (username: string) => void,
     password: string,
     setPassword: (username: string) => void
+    user: any,
     setUser: (user: any) => void
 }
 
-const LoginForm = ({username, setUsername, password, setPassword, setUser} : LoginFormProps) => {
+const LoginForm = ({username, setUsername, password, setPassword, user, setUser} : LoginFormProps) => {
     const handleLogin = async (event: { preventDefault: () => void; }) => {
         event.preventDefault();
         console.log('Logging in with:', username, password);
         try {
-            const user = await login({username, password});
-            setUser(user);
+            const user_login = await login({username, password});
+            setUser(user_login);
             setUsername('');
             setPassword('');
+            console.log('Logged in:', user);
         } catch (exception) {
             console.error('Login failed:', exception);
         }
