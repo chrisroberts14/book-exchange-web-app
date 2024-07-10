@@ -7,6 +7,9 @@ authors = [
     {name = "Christopher Roberts"}
 ]
 
+[tool.pytest.ini_options]
+addopts = "--cov-report term-missing --cov=. --cov-fail-under=99 -n auto"
+
 [tool.coverage.run]
 omit = [
     "backend/tests/*",
@@ -20,3 +23,4 @@ exclude_also = [
     "raise NotImplementedError",
     "@(abc\\.)?abstractmethod",
 ]
+fail_under = 99
