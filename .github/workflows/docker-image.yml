@@ -8,13 +8,23 @@ on:
 
 jobs:
 
-  build:
+  build-backend:
 
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v4
-    - name: Build the Docker image
+    - name: Build the backend Docker image
       run: |
         cd backend
         docker build .
+
+  build-frontend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build the frontend Docker image
+        run: |
+          cd frontend
+          docker build .
