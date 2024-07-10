@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1720628266981" clover="3.2.0">
+  <project timestamp="1720628266981" name="All files">
+    <metrics statements="23" coveredstatements="10" conditionals="0" coveredconditionals="0" methods="6" coveredmethods="2" elements="29" coveredelements="12" complexity="0" loc="23" ncloc="23" packages="3" files="4" classes="4"/>
+    <package name="src">
+      <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+      <file name="App.jsx" path="C:\Users\chris\OneDrive\Desktop\python\book-exchange-web-app\frontend\src\App.jsx">
+        <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+        <line num="5" count="1" type="stmt"/>
+        <line num="6" count="1" type="stmt"/>
+        <line num="7" count="1" type="stmt"/>
+        <line num="9" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.api">
+      <metrics statements="5" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
+      <file name="api_calls.js" path="C:\Users\chris\OneDrive\Desktop\python\book-exchange-web-app\frontend\src\api\api_calls.js">
+        <metrics statements="3" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
+        <line num="5" count="1" type="stmt"/>
+        <line num="6" count="0" type="stmt"/>
+        <line num="10" count="0" type="stmt"/>
+      </file>
+      <file name="endpoints.js" path="C:\Users\chris\OneDrive\Desktop\python\book-exchange-web-app\frontend\src\api\endpoints.js">
+        <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="1" count="1" type="stmt"/>
+        <line num="3" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.components.login_form">
+      <metrics statements="14" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="4" coveredmethods="1"/>
+      <file name="login_form.jsx" path="C:\Users\chris\OneDrive\Desktop\python\book-exchange-web-app\frontend\src\components\login_form\login_form.jsx">
+        <metrics statements="14" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="4" coveredmethods="1"/>
+        <line num="5" count="1" type="stmt"/>
+        <line num="6" count="1" type="stmt"/>
+        <line num="7" count="0" type="stmt"/>
+        <line num="8" count="0" type="stmt"/>
+        <line num="9" count="0" type="stmt"/>
+        <line num="10" count="0" type="stmt"/>
+        <line num="11" count="0" type="stmt"/>
+        <line num="12" count="0" type="stmt"/>
+        <line num="13" count="0" type="stmt"/>
+        <line num="14" count="0" type="stmt"/>
+        <line num="16" count="0" type="stmt"/>
+        <line num="20" count="1" type="stmt"/>
+        <line num="28" count="0" type="stmt"/>
+        <line num="37" count="0" type="stmt"/>
+      </file>
+    </package>
+  </project>
+</coverage>

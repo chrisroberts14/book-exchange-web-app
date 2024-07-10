@@ -22,8 +22,8 @@ FROM nginx:alpine
 # Copy the built app from the previous stage
 COPY --from=build /app/build /usr/share/nginx/html
 
-# Expose port 3000 to the outside world
-EXPOSE 3000
+# Expose port 5173 to the outside world
+EXPOSE 5173
 
 # Start Nginx server to serve the app
 CMD ["nginx", "-g", "daemon off;"]

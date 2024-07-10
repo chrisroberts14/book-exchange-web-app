@@ -8,4 +8,4 @@ services:
     build: frontend
     command: sh -c "nginx -g 'daemon off;'"
     ports:
-      - "3000:80"
+      - "5173:80"
