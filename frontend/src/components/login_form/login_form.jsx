@@ -1,17 +1,9 @@
 import React from "react";
 import { login } from "../../api/api_calls";
 
-type LoginFormProps = {
-    username: string,
-    setUsername: (username: string) => void,
-    password: string,
-    setPassword: (username: string) => void
-    user: any,
-    setUser: (user: any) => void
-}
 
-const LoginForm = ({username, setUsername, password, setPassword, user, setUser} : LoginFormProps) => {
-    const handleLogin = async (event: { preventDefault: () => void; }) => {
+const LoginForm = ({username, setUsername, password, setPassword, user, setUser}) => {
+    const handleLogin = async (event) => {
         event.preventDefault();
         console.log('Logging in with:', username, password);
         try {
