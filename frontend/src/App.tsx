@@ -1,12 +1,13 @@
-import React from 'react';
+import { useState } from 'react';
 import LoginForm from "./components/login_form/login_form";
 
 const App = () => {
-  const [username, setUsername] = React.useState('');
-  const [password, setPassword] = React.useState('');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [user, setUser] = useState(null);
 
   return (
-    <LoginForm username={username} setUsername={setUsername} password={password} setPassword={setPassword} />
+    <LoginForm username={username} setUsername={setUsername} password={password} setPassword={setPassword} setUser={setUser} />
   )
 }
 
