@@ -13,7 +13,7 @@ const LoginForm = ({username, setUsername, password, setPassword, user, setUser}
             setPassword('');
             console.log('Logged in:', user);
         } catch (exception) {
-            console.error('Login failed:', exception);
+            console.error(exception);
         }
     }
 
@@ -23,18 +23,20 @@ const LoginForm = ({username, setUsername, password, setPassword, user, setUser}
                 username:
                 <input
                     type={"text"}
+                    role={"Username"}
                     value={username}
                     name={"Username"}
-                    onChange={({target}) => setUsername(target.value)}
+                    onChange={e => setUsername(e.target.value)}
                 />
             </div>
             <div>
-                password
+                password:
                 <input
                     type="password"
+                    role={"Password"}
                     value={password}
                     name="Password"
-                    onChange={({target}) => setPassword(target.value)}
+                    onChange={e => setPassword(e.target.value)}
                 />
             </div>
             <button type="submit">login</button>
