@@ -7,7 +7,7 @@ type LoginFormProps = {
     setPassword: (username: string) => void
 }
 
-const Login_Form = ({username, setUsername, password, setPassword} : LoginFormProps) => {
+const LoginForm = ({username, setUsername, password, setPassword} : LoginFormProps) => {
     const handleLogin = (event: { preventDefault: () => void; }) => {
         event.preventDefault();
         console.log('Logging in with:', username, password);
@@ -38,5 +38,4 @@ const Login_Form = ({username, setUsername, password, setPassword} : LoginFormPr
     )
 }
 
-export default Login_Form;
-export type {LoginFormProps};
+export default LoginForm;
