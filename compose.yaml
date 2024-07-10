@@ -1,0 +1,11 @@
+services:
+  backend:
+    build: backend
+    command: sh -c "uvicorn backend.app:app --port=8000 --host=0.0.0.0"
+    ports:
+      - "8000:8000"
+  frontend:
+    build: frontend
+    command: sh -c "nginx -g 'daemon off;'"
+    ports:
+      - "3000:80"
