@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { loginEndpoint } from "./endpoints.js";
+import { loginEndpoint, signupEndpoint } from "./endpoints.js";
 
 export const login = async (credentials) => {
   const response = await axios.post(
@@ -13,3 +13,16 @@ export const login = async (credentials) => {
 
   return response.data;
 };
+
+export const signup = async (credentials) => {
+    const response = await axios.post(
+        signupEndpoint,
+        new URLSearchParams({
+        username: credentials.username,
+        password: credentials.password,
+        email: credentials.email,
+        }),
+    );
+
+    return response.data;
+}
