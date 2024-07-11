@@ -1,8 +1,8 @@
 import React from "react";
 import { login } from "../../api/api_calls";
 import { Input } from "@nextui-org/react";
-import {EyeFilledIcon} from "./EyeFilledIcon";
-import {EyeSlashFilledIcon} from "./EyeSlashFilledIcon";
+import {EyeFilledIcon} from "../EyeFilledIcon/EyeFilledIcon.jsx";
+import {EyeSlashFilledIcon} from "../EyeSlashFilledIcon/EyeSlashFilledIcon.jsx";
 import {Button} from "@nextui-org/react";
 
 
