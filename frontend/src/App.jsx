@@ -1,14 +1,14 @@
-import { useState } from 'react'
-import LoginForm from './components/login_form/login_form'
+import {useState} from "react";
+import {LoginForm} from './components/LoginForm/LoginForm';
 
-function App() {
+export function App() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [user, setUser] = useState(null);
 
     return (
-        <LoginForm username={username} setUsername={setUsername} password={password} setPassword={setPassword} user={user} setUser={setUser} />
+        <div>
+            <LoginForm username={username} setUsername={setUsername} password={password} setPassword={setPassword} user={user} setUser={setUser} />
+        </div>
     )
 }
-
-export default App
