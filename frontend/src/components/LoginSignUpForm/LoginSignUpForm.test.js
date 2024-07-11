@@ -1,5 +1,5 @@
 import {fireEvent, render, screen, waitFor} from "@testing-library/react";
-import { login } from "../../api/api_calls";
+import {login, signup} from "../../api/api_calls";
 import { LoginSignUpForm } from "./LoginSignUpForm.jsx";
 
 jest.mock("../../api/api_calls");
@@ -72,7 +72,22 @@ describe("LoginSignUpForm", () => {
   })
 
   it('should signup properly', async () => {
+    signup.mockResolvedValue({username: "test", email: "test@test.com", id: "test-id", statusCode: 201});
     await trySignUp();
-    await waitFor(() => expect(console.log).toHaveBeenCalled());
+    await waitFor(() => expect(setUser).toHaveBeenCalled());
+  });
+
+  it('should refuse signup if not 201', async () => {
+    signup.mockResolvedValue({ statusCode: 401 });
+    await trySignUp();
+    await waitFor(() => expect(console.error).toHaveBeenCalled());
+  });
+
+  it('should refuse signup when server error', async () => {
+    signup.mockImplementation(() => {
+      throw new Error();
+    });
+    await trySignUp();
+    await waitFor(() => expect(console.error).toHaveBeenCalled());
   });
 });

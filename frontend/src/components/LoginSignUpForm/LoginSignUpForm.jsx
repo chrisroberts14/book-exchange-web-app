@@ -8,7 +8,7 @@ import {
   Card,
   CardBody,
 } from "@nextui-org/react";
-import{ login} from "../../api/api_calls.js";
+import{ login, signup } from "../../api/api_calls.js";
 
 export const LoginSignUpForm = ({ setUser }) => {
   const [formSelected, setFormSelected] = useState("login");
@@ -31,7 +31,17 @@ export const LoginSignUpForm = ({ setUser }) => {
   }
 
   const handleSignUp = async (e) => {
-    console.log("Signing up")
+    e.preventDefault();
+    try {
+      const user = await signup({username: username, password: password, email: email});
+        if (user.statusCode === 201) {
+            setUser(user);
+        } else {
+            console.error("User not created")
+        }
+    } catch (e) {
+      console.error("Error creating user")
+    }
   }
 
   return (
