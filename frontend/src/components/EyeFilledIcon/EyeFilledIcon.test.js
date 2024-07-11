@@ -1,9 +1,11 @@
-import {EyeFilledIcon} from "./EyeFilledIcon.jsx";
-import { render } from '@testing-library/react';
+import { render } from "@testing-library/react";
 
-describe('EyeFilledIcon', () => {
-    it('renders correctly', () => {
-        const { container } = render(<EyeFilledIcon />);
-        expect(container).toMatchSnapshot();
-    });
+import { EyeFilledIcon } from "./EyeFilledIcon.jsx";
+
+describe("EyeFilledIcon", () => {
+  it("renders correctly", () => {
+    const { container } = render(<EyeFilledIcon />);
+
+    expect(container).toMatchSnapshot();
+  });
 });

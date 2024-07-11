@@ -1,12 +1,13 @@
-import {useState} from "react";
-import {LoginForm} from './components/LoginForm/LoginForm';
+import { useState } from "react";
+
+import { NavbarComponent } from "./components/Navbar/Navbar";
 
 export function App() {
-    const [user, setUser] = useState(null);
+  const [user, setUser] = useState(null);
 
-    return (
-        <div>
-            <LoginForm user={user} setUser={setUser} />
-        </div>
-    )
+  return (
+    <div>
+      <NavbarComponent loggedIn={user} signedIn={false} />
+    </div>
+  );
 }

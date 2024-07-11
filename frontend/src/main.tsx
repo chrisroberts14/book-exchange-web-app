@@ -11,9 +11,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <BrowserRouter>
       <Provider>
-          <main className="dark text-foreground bg-background">
-              <App/>
-          </main>
+        <main className="dark text-foreground bg-background">
+          <App />
+        </main>
       </Provider>
     </BrowserRouter>
   </React.StrictMode>,
