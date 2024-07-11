@@ -99,7 +99,7 @@ export const AvatarDropdown = (user) => {
           as="button"
           className="transition-transform"
           color="secondary"
-          name={user.user == null ? "" : user.user.name}
+          name={user.user.name}
           size="sm"
         />
       </DropdownTrigger>
@@ -107,7 +107,7 @@ export const AvatarDropdown = (user) => {
         <DropdownItem key="profile" className="h-14 gap-2">
           <p className="font-semibold">Signed in as</p>
           <p className="font-semibold">
-            {user.user == null ? "" : user.user.name}
+            {user.user.name}
           </p>
         </DropdownItem>
         <DropdownItem key="user_settings">User Settings</DropdownItem>

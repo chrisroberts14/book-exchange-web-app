@@ -4,7 +4,7 @@ import { NavbarComponent } from "./Navbar.jsx";
 
 describe("NavbarComponent", () => {
   it("renders correctly logged in", () => {
-    const { container } = render(<NavbarComponent signedIn={true} />);
+    const { container } = render(<NavbarComponent signedIn={true} loggedIn={{name: ""}}/>);
 
     expect(container).toMatchSnapshot();
   });
