@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import { login } from "../../api/api_calls";
 import { Input } from "@nextui-org/react";
 import {EyeFilledIcon} from "../EyeFilledIcon/EyeFilledIcon.jsx";
@@ -6,14 +6,23 @@ import {EyeSlashFilledIcon} from "../EyeSlashFilledIcon/EyeSlashFilledIcon.jsx";
 import {Button} from "@nextui-org/react";
 
 
-export const LoginForm = ({username, setUsername, password, setPassword, user, setUser}) => {
+export const LoginForm = ({user, setUser}) => {
     const [isVisible, setIsVisible] = React.useState(false);
     const toggleVisibility = () => setIsVisible(!isVisible);
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
 
 
     const handleLogin = async (event) => {
         event.preventDefault();
         console.log('Logging in with:', username, password);
+        // Even though the front end stops this empty username and password being handed in
+        // still check here just in case
+        if (username === '' || password === '') {
+            // Will be changed to a user notification in the future
+            console.error('Username and password must not be empty');
+            return;
+        }
         try {
             const user_login = await login({username, password});
             setUser(user_login);
@@ -33,6 +42,7 @@ export const LoginForm = ({username, setUsername, password, setPassword, user, s
                 label="Username"
                 variant="bordered"
                 className="max-w-xs"
+                onChange={({ target }) => setUsername(target.value)}
             />
             <Input
                 isRequired
@@ -49,8 +59,9 @@ export const LoginForm = ({username, setUsername, password, setPassword, user, s
                 }
                 type={isVisible ? "text" : "password"}
                 className="max-w-xs"
+                onChange={({ target }) => setPassword(target.value)}
             />
-            <Button color="primary" type="submit">Login</Button>
+            <Button color="primary" type="submit" data-testid="login-button">Login</Button>
         </form>
     )
 }
