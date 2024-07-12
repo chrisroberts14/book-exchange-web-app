@@ -2,7 +2,7 @@
 
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.orm import Session
 from starlette.status import HTTP_201_CREATED, HTTP_404_NOT_FOUND, HTTP_204_NO_CONTENT
 
@@ -27,12 +27,15 @@ async def create_book(book: BookIn, db: Session = Depends(get_db)) -> BookOut:
 
 
 @books.get("/")
-async def get_all_books(db: Session = Depends(get_db)) -> list[BookOut]:
+async def get_all_books(
+    request: Request, db: Session = Depends(get_db)
+) -> list[BookOut]:
     """
     Get all books.
 
     :return:
     """
+    print(request.headers.get("Authorization"))
     return BookDb.get_all(db)
 
 

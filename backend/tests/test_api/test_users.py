@@ -45,10 +45,14 @@ class TestUserRoot:  # pylint: disable=too-few-public-methods
         response = client.get(self.route)
         assert response.status_code == 200, response.json()
         assert {user.username for user in users} == {
-            user["username"] for user in response.json()
+            user["username"]
+            for user in response.json()
+            if "test_user" not in user["username"]
         }
         assert {user.email for user in users} == {
-            user["email"] for user in response.json()
+            user["email"]
+            for user in response.json()
+            if "test_user" not in user["username"]
         }
 
 

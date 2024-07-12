@@ -37,6 +37,18 @@ event.listen(engine, "connect", _enable_foreign_keys)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base.metadata.create_all(bind=engine)
 
+# Add authorized user to database
+with SessionLocal() as auth_user_session:
+    UserDb.create(
+        auth_user_session,
+        UserDb(
+            username="test_user",
+            email="test@test.com",
+            hashed_password=hash_password("password"),
+        ),
+    )
+    auth_user_session.commit()
+
 
 def override_get_db():
     """
@@ -96,6 +108,18 @@ def client(auth_token) -> Generator[TestClient, None, None]:  # pylint: disable=
     app.dependency_overrides[get_db] = override_get_db
     with TestClient(app) as test_client:
         test_client.headers.update({"Authorization": f"Bearer {auth_token}"})
+        yield test_client
+
+
+@pytest.fixture(scope="session")
+def unauth_client() -> Generator[TestClient, None, None]:
+    """
+    Fixture for the test client without authorization.
+
+    :return:
+    """
+    app.dependency_overrides[get_db] = override_get_db
+    with TestClient(app) as test_client:
         yield test_client
 
 

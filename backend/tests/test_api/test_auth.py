@@ -74,14 +74,14 @@ class TestCurrentUser:  # pylint: disable=too-few-public-methods
         assert response.status_code == 200, response.json()
         assert response.json()["username"] == sample_user.username
 
-    def test_get_current_user_no_auth(self, client: TestClient):
+    def test_get_current_user_no_auth(self, unauth_client: TestClient):
         """
         Test get current user without authorization.
 
-        :param client:
+        :param unauth_client:
         :return:
         """
-        response = client.get(self.route)
+        response = unauth_client.get(self.route)
         assert response.status_code == HTTP_401_UNAUTHORIZED, response.json()
 
     def test_get_current_user_bad_auth(self, client: TestClient):

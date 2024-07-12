@@ -53,11 +53,15 @@ class TestUserDb:
         ]
         db.bulk_save_objects(users)
         db_users = UserDb.get_all(db)
-        assert len(db_users) == 10
-        assert {db_user.username for db_user in db_users} == {
-            user.username for user in users
-        }
-        assert {db_user.email for db_user in db_users} == {user.email for user in users}
+        assert len(db_users) == 11
+        assert {
+            db_user.username
+            for db_user in db_users
+            if "test_user" not in db_user.username
+        } == {user.username for user in users}
+        assert {
+            db_user.email for db_user in db_users if "test_user" not in db_user.username
+        } == {user.email for user in users}
 
     def test_get_by_id(self, db: Session, sample_user: UserOut):
         """

@@ -7,13 +7,13 @@ from fastapi.middleware.cors import CORSMiddleware
 from backend.app.api.users import users
 from backend.app.api.books import books
 from backend.app.api.listings import listings
-from backend.app.api.auth import auth, oauth2_scheme
+from backend.app.api.auth import auth, oauth2_scheme, get_current_user
 
 
 app = FastAPI()
 app.include_router(users, prefix="/users", tags=["users"])
 app.include_router(
-    books, prefix="/books", tags=["books"], dependencies=[Depends(oauth2_scheme)]
+    books, prefix="/books", tags=["books"], dependencies=[Depends(get_current_user)]
 )
 app.include_router(
     listings,
