@@ -132,7 +132,7 @@ async def login(
     access_token = create_access_token(
         data={"sub": user.username}, expires_delta=access_token_expires
     )
-    return Token(access_token=access_token, token_type="bearer")
+    return Token(username=user.username, access_token=access_token, token_type="bearer")
 
 
 @auth.get("/me", response_model=UserOut)

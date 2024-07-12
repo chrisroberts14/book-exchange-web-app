@@ -58,17 +58,17 @@ export const NavbarComponent = (input) => {
         </NavbarItem>
       </NavbarContent>
       <NavbarContent justify="end">
-        {input.signedIn ? (
-          <AvatarDropdown user={input.loggedIn} />
+        {input.user ? (
+          <AvatarDropdown user={input.loggedIn} setUser={input.setUser} />
         ) : (
-          <LoginSignUp />
+          <LoginSignUp setUser={input.setUser} setToken={input.setToken} />
         )}
       </NavbarContent>
     </Navbar>
   );
 };
 
-export const LoginSignUp = () => {
+export const LoginSignUp = (input) => {
   return (
     <Dropdown closeOnSelect={false} placement="bottom-end">
       <DropdownTrigger>
@@ -83,39 +83,37 @@ export const LoginSignUp = () => {
       </DropdownTrigger>
       <DropdownMenu aria-label="Profile Actions">
         <DropdownItem key="sign-in-log-in" isReadOnly>
-          <LoginSignUpForm />
+          <LoginSignUpForm setUser={input.setUser} setToken={input.setToken} />
         </DropdownItem>
       </DropdownMenu>
     </Dropdown>
   );
 };
 
-export const AvatarDropdown = (user) => {
+export const AvatarDropdown = ({user, setUser}) => {
   return (
     <Dropdown placement="bottom-end">
-      <DropdownTrigger>
+      <DropdownTrigger data-testid="user-dropdown-open">
         <Avatar
           isBordered
           as="button"
           className="transition-transform"
           color="secondary"
-          name={user.user.name}
+          name={user}
           size="sm"
         />
       </DropdownTrigger>
       <DropdownMenu aria-label="Profile Actions" variant="flat">
-        <DropdownItem key="profile" className="h-14 gap-2">
+        <DropdownItem key="profile" className="h-14 gap-2" textValue="Profile">
           <p className="font-semibold">Signed in as</p>
           <p className="font-semibold">
-            {user.user.name}
+            {user}
           </p>
         </DropdownItem>
-        <DropdownItem key="user_settings">User Settings</DropdownItem>
-        <DropdownItem key="user_books">Your Books</DropdownItem>
-        <DropdownItem key="user_listings">Your Listings</DropdownItem>
-        <DropdownItem key="logout" color="danger">
-          Log Out
-        </DropdownItem>
+        <DropdownItem key="user_settings" textValue="User Settings">User Settings</DropdownItem>
+        <DropdownItem key="user_books" textValue="Your Books">Your Books</DropdownItem>
+        <DropdownItem key="user_listings" textValue="Your Listings">Your Listings</DropdownItem>
+        <DropdownItem key="logout" color="danger" data-testid="logout-button" onPress={() => {window.localStorage.clear(); setUser(null);}} textValue="Log Out">Log Out</DropdownItem>
       </DropdownMenu>
     </Dropdown>
   );

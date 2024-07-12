@@ -1,6 +1,6 @@
 // ErrorMessageBar.jsx
 import React from 'react';
-import {Card, Button, CardBody} from '@nextui-org/react';
+import {Card, CardBody} from '@nextui-org/react';
 
 export const ErrorMessageBar = ({ message, visible }) => {
     if (!visible) return null;

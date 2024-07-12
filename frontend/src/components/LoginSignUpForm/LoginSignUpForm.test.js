@@ -54,21 +54,19 @@ describe("LoginSignUpForm", () => {
   });
 
   it('should login correctly', async () => {
-    login.mockResolvedValue({ username: 'testuser', statusCode: 200 });
+    login.mockResolvedValue({ username: 'testuser', access_token: "test" });
     await tryLogin();
     await waitFor(() => expect(setUser).toHaveBeenCalled());
   })
 
   it('should refuse login when using wrong credentials', async () => {
-    login.mockResolvedValue({ statusCode: 401 });
+    login.mockResolvedValue(() => { errorMessage: "Username or password is incorrect"  });
     await tryLogin();
     waitFor(() => expect(screen.getByTestId("error-bar")).toBeInTheDocument());
   })
 
   it('should refuse login when server error', async () => {
-    login.mockImplementation(() => {
-      throw new Error();
-    });
+    login.mockResolvedValue(() => { errorMessage: "An error has occurred." });
     await tryLogin();
     waitFor(() => expect(screen.getByTestId("error-bar")).toBeInTheDocument());
   })
@@ -86,10 +84,8 @@ describe("LoginSignUpForm", () => {
   });
 
   it('should refuse signup when server error', async () => {
-    signup.mockImplementation(() => {
-      throw new Error();
-    });
+    login.mockResolvedValue(() => { errorMessage: "An error has occurred." });
     await trySignUp();
-    waitFor(() => expect(screen.getByTestId("error-bar")).toBeInTheDocument());
+    waitFor(() => expect(screen.getByTestId("error-bar")).toBeInTheDocument(), {timeout: 3000});
   });
 });

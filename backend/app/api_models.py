@@ -18,6 +18,7 @@ class BaseModel(PydanticBaseModel):
 class Token(BaseModel):
     """Token model."""
 
+    username: str
     access_token: str
     token_type: str
 

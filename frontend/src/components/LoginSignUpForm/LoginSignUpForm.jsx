@@ -11,7 +11,7 @@ import {
 import{ login, signup } from "../../api/api_calls.js";
 import { ErrorMessageBar } from "../ErrorMessageBar/ErrorMessageBar";
 
-export const LoginSignUpForm = ({ setUser }) => {
+export const LoginSignUpForm = ({ setUser, setToken }) => {
   const [formSelected, setFormSelected] = useState("login");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -21,34 +21,34 @@ export const LoginSignUpForm = ({ setUser }) => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    try {
-      const user = await login({username: username, password: password});
-      if (user.statusCode === 200) {
-        setUser(user);
-      } else {
-        setIsError(true);
-        setErrorMessage("Incorrect details");
-      }
-    } catch (e) {
+    const response = await login({username: username, password: password});
+    if (response.access_token !== undefined) {
+      setUser(response.username);
+      setUsername("");
+      setEmail("");
+      setPassword("");
+      window.localStorage.setItem("token", response.access_token);
+      window.localStorage.setItem("username", response.username);
+    } else {
       setIsError(true);
-      setErrorMessage("Error logging in");
+      setTimeout(() => setIsError(false), 5000);
+      setErrorMessage(response.errorMessage);
     }
   }
 
   const handleSignUp = async (e) => {
     e.preventDefault();
-    try {
-      const user = await signup({username: username, password: password, email: email});
-        if (user.statusCode === 201) {
-            setUser(user);
-        } else {
-            setIsError(true);
-            setErrorMessage("User not created");
-        }
-    } catch (e) {
-      setIsError(true);
-      setErrorMessage("Error creating user");
-    }
+    const response = await signup({username: username, password: password, email: email});
+      if (response.username !== undefined) {
+        setUser(response.username);
+        setUsername("");
+        setEmail("");
+        setPassword("");
+      } else {
+        setIsError(true);
+        setTimeout(() => setIsError(false), 5000);
+        setErrorMessage(response.errorMessage);
+      }
   }
 
   const toggleForm = () => {
@@ -76,6 +76,9 @@ export const LoginSignUpForm = ({ setUser }) => {
                     onSubmitFunc={handleLogin}
                     buttonText="Login"
                     toggleForm={toggleForm}
+                    username={username}
+                    password={password}
+                    email={email}
                 />
             </Tab>
             <Tab key="sign-up" title="Sign up" data-testid="signup-tab">
@@ -87,6 +90,9 @@ export const LoginSignUpForm = ({ setUser }) => {
                   onSubmitFunc={handleSignUp}
                   buttonText="Sign up"
                   toggleForm={toggleForm}
+                  username={username}
+                  password={password}
+                  email={email}
               />
             </Tab>
           </Tabs>
@@ -96,7 +102,7 @@ export const LoginSignUpForm = ({ setUser }) => {
   );
 };
 
-const InputBoxes = ({ formSelected, setUsername, setPassword, setEmail, onSubmitFunc, buttonText, toggleForm }) => {
+const InputBoxes = ({ formSelected, username, setUsername, password, setPassword, email, setEmail, onSubmitFunc, buttonText, toggleForm }) => {
   return (<form className="flex flex-col gap-4" onSubmit={onSubmitFunc}>
     <Input
         isRequired
@@ -104,6 +110,7 @@ const InputBoxes = ({ formSelected, setUsername, setPassword, setEmail, onSubmit
         placeholder="Enter your username"
         type="username"
         data-testid="username-input"
+        value={username}
         onChange={(e) => {
           setUsername(e.target.value)
         }}
@@ -113,6 +120,7 @@ const InputBoxes = ({ formSelected, setUsername, setPassword, setEmail, onSubmit
         label="Email"
         placeholder="Enter your email"
         type="email"
+        value={email}
         data-testid="email-input"
         onChange={(e) => {setEmail(e.target.value)}}
         hidden={formSelected === "login"}
@@ -122,6 +130,7 @@ const InputBoxes = ({ formSelected, setUsername, setPassword, setEmail, onSubmit
         label="Password"
         placeholder="Enter your password"
         type="password"
+        value={password}
         data-testid="password-input"
         onChange={(e) => {
           setPassword(e.target.value)
