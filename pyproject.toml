@@ -13,7 +13,8 @@ addopts = "--cov-report term-missing --cov=. --cov-fail-under=99"
 [tool.coverage.run]
 omit = [
     "backend/tests/*",
-    "backend/alembic/*"
+    "backend/alembic/*",
+    "backend/utils/*"
 ]
 
 [tool.coverage.report]

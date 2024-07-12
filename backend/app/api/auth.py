@@ -18,7 +18,7 @@ from backend.app.db_models import UserDb
 
 auth = APIRouter()
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
 
 def verify_password(plain_password: str, hashed_password: str):
