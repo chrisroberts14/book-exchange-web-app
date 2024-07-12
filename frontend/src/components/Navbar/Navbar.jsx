@@ -47,10 +47,12 @@ export const NavbarComponent = (input) => {
             className="gap-36"
             color="primary"
             size="lg"
+            selectedKey={input.screenState}
+            onSelectionChange={(key) => input.setState(key)}
           >
-            <Tab key="listings" title="Listings" />
-            <Tab key="books" title="Books" />
-            <Tab key="users" title="Users" />
+            <Tab key="listings" title="Listings"/>
+            <Tab key="books" title="Books"/>
+            <Tab key="users" title="Users"/>
           </Tabs>
         </NavbarItem>
       </NavbarContent>
