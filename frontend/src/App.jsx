@@ -35,7 +35,7 @@ export function App() {
 
   return (
     <div>
-      <NavbarComponent loggedIn={user} signedIn={false} setUser={setUser} user={user} screenState={screenState} setState={setScreenState}/>
+      <NavbarComponent loggedIn={user} setUser={setUser} user={user} screenState={screenState} setState={setScreenState}/>
         <div>
             <CardsDisplay cards={cards}/>
         </div>

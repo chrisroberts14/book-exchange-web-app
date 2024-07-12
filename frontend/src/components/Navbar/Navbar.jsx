@@ -58,7 +58,7 @@ export const NavbarComponent = (input) => {
       </NavbarContent>
       <NavbarContent justify="end">
         {input.user ? (
-          <AvatarDropdown user={input.loggedIn} setUser={input.setUser} />
+          <AvatarDropdown user={input.user} setUser={input.setUser} />
         ) : (
           <LoginSignUp setUser={input.setUser} />
         )}

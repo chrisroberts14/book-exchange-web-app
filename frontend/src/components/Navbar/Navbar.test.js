@@ -3,13 +3,19 @@ import {fireEvent, render, screen} from "@testing-library/react";
 import {AvatarDropdown, NavbarComponent} from "./Navbar.jsx";
 
 describe("NavbarComponent", () => {
+  let setState;
+
+  beforeEach(() => {
+    setState = jest.fn();
+  });
+
   it("renders correctly logged in", () => {
-    const { container } = render(<NavbarComponent signedIn={true} loggedIn={{name: ""}}/>);
+    const { container } = render(<NavbarComponent user={"test"} setState={setState}/>);
     expect(container).toMatchSnapshot();
   });
 
   it("renders correctly logged out", () => {
-    const { container } = render(<NavbarComponent signedIn={false} />);
+    const { container } = render(<NavbarComponent setState={setState}/>);
     expect(container).toMatchSnapshot();
   });
 });
