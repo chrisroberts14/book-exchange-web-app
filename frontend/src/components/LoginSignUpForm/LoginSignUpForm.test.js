@@ -1,4 +1,4 @@
-import {fireEvent, render, screen, waitFor} from "@testing-library/react";
+import {fireEvent, render, screen, waitFor, act} from "@testing-library/react";
 import {login, signup} from "../../api/api_calls";
 import { LoginSignUpForm } from "./LoginSignUpForm.jsx";
 
@@ -9,25 +9,27 @@ describe("LoginSignUpForm", () => {
 
   beforeEach(() => {
     setUser = jest.fn();
-    console.log = jest.fn();
-    console.error = jest.fn();
   });
 
   const tryLogin = async () => {
     render(<LoginSignUpForm setUser={setUser} />);
-    fireEvent.click(screen.getByTestId("login-tab"));
-    fireEvent.change(screen.getByTestId("login-username"), { target: { value: "test_user" } });
-    fireEvent.change(screen.getByTestId("login-password"), { target: { value: "password" } });
-    fireEvent.click(screen.getByTestId("login-button"));
+    await act(async () => {
+      fireEvent.click(screen.getByTestId("login-tab"));
+      fireEvent.change(screen.getByTestId("username-input"), {target: {value: "test_user"}});
+      fireEvent.change(screen.getByTestId("password-input"), {target: {value: "password"}});
+      fireEvent.click(screen.getByTestId("submit-button"));
+    });
   }
 
   const trySignUp = async () => {
     render(<LoginSignUpForm setUser={setUser} />);
-    fireEvent.click(screen.getByTestId("signup-tab"));
-    fireEvent.change(screen.getByTestId("signup-username"), { target: { value: "test_user" } });
-    fireEvent.change(screen.getByTestId("signup-password"), { target: { value: "password" } });
-    fireEvent.change(screen.getByTestId("signup-email"), { target: { value: "test@test.com"}});
-    fireEvent.click(screen.getByTestId("signup-button"));
+    await act(async () => {
+      fireEvent.click(screen.getByTestId("signup-tab"));
+      fireEvent.change(screen.getByTestId("username-input"), {target: {value: "test_user"}});
+      fireEvent.change(screen.getByTestId("password-input"), {target: {value: "password"}});
+      fireEvent.change(screen.getByTestId("email-input"), {target: {value: "test@test.com"}});
+      fireEvent.click(screen.getByTestId("submit-button"));
+    });
   }
 
   it("renders correctly", () => {
@@ -38,17 +40,17 @@ describe("LoginSignUpForm", () => {
   it("clicking on tabs changes form", async () => {
     render(<LoginSignUpForm setUser={setUser} />);
     fireEvent.click(screen.getByTestId("signup-tab"));
-    expect(screen.getByTestId("signup-username")).toBeInTheDocument();
+    expect(screen.getByTestId("email-input")).toBeInTheDocument();
     fireEvent.click(screen.getByTestId("login-tab"));
-    expect(screen.getByTestId("login-username")).toBeInTheDocument();
+    expect(screen.getByTestId("username-input")).toBeInTheDocument();
   });
 
   it("clicking on links changes form", async () => {
     render(<LoginSignUpForm setUser={setUser} />);
-    fireEvent.click(screen.getByTestId("signup-link"));
-    expect(screen.getByTestId("signup-username")).toBeInTheDocument();
-    fireEvent.click(screen.getByTestId("login-link"));
-    expect(screen.getByTestId("login-username")).toBeInTheDocument();
+    fireEvent.click(screen.getByTestId("tab-swap-link"));
+    expect(screen.getByTestId("email-input")).toBeInTheDocument();
+    fireEvent.click(screen.getByTestId("tab-swap-link"));
+    expect(screen.getByTestId("username-input")).toBeInTheDocument();
   });
 
   it('should login correctly', async () => {
@@ -60,7 +62,7 @@ describe("LoginSignUpForm", () => {
   it('should refuse login when using wrong credentials', async () => {
     login.mockResolvedValue({ statusCode: 401 });
     await tryLogin();
-    await waitFor(() => expect(console.error).toHaveBeenCalled());
+    waitFor(() => expect(screen.getByTestId("error-bar")).toBeInTheDocument());
   })
 
   it('should refuse login when server error', async () => {
@@ -68,7 +70,7 @@ describe("LoginSignUpForm", () => {
       throw new Error();
     });
     await tryLogin();
-    await waitFor(() => expect(console.error).toHaveBeenCalled());
+    waitFor(() => expect(screen.getByTestId("error-bar")).toBeInTheDocument());
   })
 
   it('should signup properly', async () => {
@@ -80,7 +82,7 @@ describe("LoginSignUpForm", () => {
   it('should refuse signup if not 201', async () => {
     signup.mockResolvedValue({ statusCode: 401 });
     await trySignUp();
-    await waitFor(() => expect(console.error).toHaveBeenCalled());
+    waitFor(() => expect(screen.getByTestId("error-bar")).toBeInTheDocument());
   });
 
   it('should refuse signup when server error', async () => {
@@ -88,6 +90,6 @@ describe("LoginSignUpForm", () => {
       throw new Error();
     });
     await trySignUp();
-    await waitFor(() => expect(console.error).toHaveBeenCalled());
+    waitFor(() => expect(screen.getByTestId("error-bar")).toBeInTheDocument());
   });
 });
