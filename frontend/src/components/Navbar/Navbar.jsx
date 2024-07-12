@@ -11,13 +11,10 @@ import {
   Tabs,
   Tab,
 } from "@nextui-org/react";
-import { useState } from "react";
 
 import { LoginSignUpForm } from "../LoginSignUpForm/LoginSignUpForm.jsx";
 
 export const NavbarComponent = (input) => {
-  const [state, setState] = useState("Listings");
-
   return (
     <Navbar
       shouldHideOnScroll
@@ -61,7 +58,7 @@ export const NavbarComponent = (input) => {
         {input.user ? (
           <AvatarDropdown user={input.loggedIn} setUser={input.setUser} />
         ) : (
-          <LoginSignUp setUser={input.setUser} setToken={input.setToken} />
+          <LoginSignUp setUser={input.setUser} />
         )}
       </NavbarContent>
     </Navbar>
@@ -83,7 +80,7 @@ export const LoginSignUp = (input) => {
       </DropdownTrigger>
       <DropdownMenu aria-label="Profile Actions">
         <DropdownItem key="sign-in-log-in" isReadOnly>
-          <LoginSignUpForm setUser={input.setUser} setToken={input.setToken} />
+          <LoginSignUpForm setUser={input.setUser}/>
         </DropdownItem>
       </DropdownMenu>
     </Dropdown>

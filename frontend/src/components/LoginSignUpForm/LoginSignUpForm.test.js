@@ -60,13 +60,13 @@ describe("LoginSignUpForm", () => {
   })
 
   it('should refuse login when using wrong credentials', async () => {
-    login.mockResolvedValue(() => { errorMessage: "Username or password is incorrect"  });
+    login.mockResolvedValue(() => { "Username or password is incorrect"  });
     await tryLogin();
     waitFor(() => expect(screen.getByTestId("error-bar")).toBeInTheDocument());
   })
 
   it('should refuse login when server error', async () => {
-    login.mockResolvedValue(() => { errorMessage: "An error has occurred." });
+    login.mockResolvedValue(() => { "An error has occurred." });
     await tryLogin();
     waitFor(() => expect(screen.getByTestId("error-bar")).toBeInTheDocument());
   })
@@ -84,7 +84,7 @@ describe("LoginSignUpForm", () => {
   });
 
   it('should refuse signup when server error', async () => {
-    login.mockResolvedValue(() => { errorMessage: "An error has occurred." });
+    login.mockResolvedValue(() => { "An error has occurred." });
     await trySignUp();
     waitFor(() => expect(screen.getByTestId("error-bar")).toBeInTheDocument(), {timeout: 3000});
   });

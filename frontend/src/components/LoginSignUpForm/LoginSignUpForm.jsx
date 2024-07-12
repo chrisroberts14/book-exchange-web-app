@@ -11,7 +11,7 @@ import {
 import{ login, signup } from "../../api/api_calls.js";
 import { ErrorMessageBar } from "../ErrorMessageBar/ErrorMessageBar";
 
-export const LoginSignUpForm = ({ setUser, setToken }) => {
+export const LoginSignUpForm = ({ setUser }) => {
   const [formSelected, setFormSelected] = useState("login");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");

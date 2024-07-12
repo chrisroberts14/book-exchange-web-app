@@ -26,7 +26,7 @@ export function App() {
 
   return (
     <div>
-      <NavbarComponent loggedIn={user} signedIn={false} setUser={setUser} setToken={setToken} user={user}/>
+      <NavbarComponent loggedIn={user} signedIn={false} setUser={setUser} user={user}/>
     </div>
   );
 }
