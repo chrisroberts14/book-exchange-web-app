@@ -1,5 +1,5 @@
 import axios from "axios";
-import {getAllBooksEndpoint, loginEndpoint, signupEndpoint} from "./endpoints.js";
+import {getAllBooksEndpoint, getAllListingsEndpoint, loginEndpoint, signupEndpoint} from "./endpoints.js";
 
 let token = null;
 
@@ -62,6 +62,19 @@ export const getAllBooks = async () => {
     try {
         const response = await axios.get(
             getAllBooksEndpoint,
+            auth,
+        );
+        return response.data;
+    } catch (e) {
+        return {errorMessage: "An error has occurred." };
+    }
+}
+
+export const getAllListings = async () => {
+    const auth = authHeader();
+    try {
+        const response = await axios.get(
+            getAllListingsEndpoint,
             auth,
         );
         return response.data;

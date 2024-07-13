@@ -1,10 +1,11 @@
 import {useEffect, useState} from "react";
 
 import { NavbarComponent } from "./components/Navbar/Navbar";
-import { setToken, getAllBooks } from "./api/api_calls";
+import {setToken, getAllBooks, getAllListings} from "./api/api_calls";
 import { BookCard } from "./components/BookCard/BookCard.jsx";
 import { CardsDisplay } from "./components/CardsDisplay/CardsDisplay.jsx";
 import {ErrorMessageBar} from "./components/ErrorMessageBar/ErrorMessageBar.jsx";
+import {ListingCard} from "./components/ListingCard/ListingCard.jsx";
 
 export function App() {
   const [user, setUser] = useState(null);
@@ -39,14 +40,24 @@ export function App() {
         async function fetchData(){
             switch (screenState) {
                 case "books":
-                    const response = await getAllBooks();
-                    if (response.errorMessage) {
+                    const books_response = await getAllBooks();
+                    if (books_response.errorMessage) {
                         setIsError(true);
                         setTimeout(() => setIsError(false), 5000);
-                        setErrorMessage(response.errorMessage);
+                        setErrorMessage(books_response.errorMessage);
                         return;
                     }
-                    setCards(response.map((book) => <BookCard key={book.id} book={book}/>));
+                    setCards(books_response.map((book) => <BookCard key={book.id} book={book}/>));
+                    break;
+                case "listings":
+                    const listings_response = await getAllListings();
+                    if (listings_response.errorMessage) {
+                        setIsError(true);
+                        setTimeout(() => setIsError(false), 5000);
+                        setErrorMessage(listings_response.errorMessage);
+                        return;
+                    }
+                    setCards(listings_response.map((listing) => <ListingCard key={listing.id} listing={listing}/>));
                     break;
                 default:
                     console.log("Default case hit in switch statement in App.jsx");
@@ -62,10 +73,7 @@ export function App() {
     <div>
       <NavbarComponent loggedIn={user} setUser={setUser} user={user} screenState={screenState} setState={setScreenState}/>
         <ErrorMessageBar message={errorMessage} visible={isError}/>
-        <div>
-            <CardsDisplay cards={cards}/>
-        </div>
-
+        {user ? <CardsDisplay cards={cards}/> : <p>Not logged in</p>}
     </div>
   );
 }
