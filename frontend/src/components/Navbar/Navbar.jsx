@@ -9,7 +9,7 @@ import {
   DropdownItem,
   Avatar,
   Tabs,
-  Tab, user,
+  Tab,
 } from "@nextui-org/react";
 
 import { LoginSignUpForm } from "../LoginSignUpForm/LoginSignUpForm.jsx";

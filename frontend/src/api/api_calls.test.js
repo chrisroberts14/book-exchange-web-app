@@ -1,6 +1,6 @@
 import * as axios from "axios";
 
-import { login, signup, setToken, authHeader, getAllBooks } from "./api_calls.js";
+import {login, signup, setToken, authHeader, getAllBooks, getAllListings} from "./api_calls.js";
 
 jest.mock("axios");
 
@@ -73,6 +73,20 @@ describe("getAllBooks", () => {
   it("should return an error when server errors occur", async () => {
     axios.get.mockRejectedValue(new Error("An error has occurred."));
     const data = await getAllBooks();
+    expect(data).toStrictEqual({errorMessage: "An error has occurred."});
+  });
+});
+
+describe("getAllListings", () => {
+  it("should return all listings", async () => {
+    axios.get.mockResolvedValue({data: [{title: "test", author: "test"}]});
+    const data = await getAllListings();
+    expect(data).toStrictEqual([{title: "test", author: "test"}]);
+  });
+
+  it("should return an error when server errors occur", async () => {
+    axios.get.mockRejectedValue(new Error("An error has occurred."));
+    const data = await getAllListings();
     expect(data).toStrictEqual({errorMessage: "An error has occurred."});
   });
 });

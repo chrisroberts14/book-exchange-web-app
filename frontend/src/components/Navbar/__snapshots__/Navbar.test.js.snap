@@ -8,7 +8,7 @@ exports[`Avatar Dropdown renders correctly 1`] = `
     class="flex relative justify-center items-center box-border overflow-hidden align-middle outline-none data-[focus-visible=true]:z-10 data-[focus-visible=true]:outline-2 data-[focus-visible=true]:outline-focus data-[focus-visible=true]:outline-offset-2 w-8 h-8 text-tiny bg-secondary text-secondary-foreground rounded-full ring-2 ring-offset-2 ring-offset-background dark:ring-offset-background-dark ring-secondary z-10 aria-expanded:scale-[0.97] aria-expanded:opacity-70 subpixel-antialiased transition-transform"
     data-slot="trigger"
     data-testid="user-dropdown-open"
-    id="react-aria-:ri:"
+    id="react-aria-:rc:"
     type="button"
   >
     <span
@@ -189,79 +189,7 @@ exports[`NavbarComponent renders correctly logged out 1`] = `
       >
         <li
           class="text-medium whitespace-nowrap box-border list-none data-[active=true]:font-semibold flex relative h-full items-center data-[active=true]:after:content-[''] data-[active=true]:after:absolute data-[active=true]:after:bottom-0 data-[active=true]:after:left-0 data-[active=true]:after:right-0 data-[active=true]:after:h-[3px] data-[active=true]:after:rounded-[2px] data-[active=true]:after:bg-primary data-[active=true]:after:color-primary"
-        >
-          <div
-            aria-label="Tabs radius"
-            class="inline-flex gap-36"
-            data-slot="base"
-          >
-            <div
-              aria-label="Tabs radius"
-              aria-orientation="horizontal"
-              class="flex p-1 h-fit gap-2 items-center flex-nowrap overflow-x-scroll scrollbar-hide bg-default-100 rounded-large"
-              data-slot="tabList"
-              id="react-aria-:r9:"
-              role="tablist"
-            >
-              <button
-                aria-selected="true"
-                class="z-0 w-full px-3 py-1 flex group relative justify-center items-center cursor-pointer transition-opacity tap-highlight-transparent data-[disabled=true]:cursor-not-allowed data-[disabled=true]:opacity-30 data-[hover-unselected=true]:opacity-disabled outline-none data-[focus-visible=true]:z-10 data-[focus-visible=true]:outline-2 data-[focus-visible=true]:outline-focus data-[focus-visible=true]:outline-offset-2 h-9 text-medium rounded-medium"
-                data-key="listings"
-                data-selected="true"
-                data-slot="tab"
-                id="react-aria-:r9:-tab-listings"
-                role="tab"
-                tabindex="0"
-                type="button"
-              >
-                <span
-                  class="absolute z-0 inset-0 rounded-medium bg-primary text-primary-foreground"
-                  data-slot="cursor"
-                />
-                <div
-                  class="relative z-10 whitespace-nowrap transition-colors text-default-500 group-data-[selected=true]:text-primary-foreground"
-                  data-slot="tabContent"
-                >
-                  Listings
-                </div>
-              </button>
-              <button
-                aria-selected="false"
-                class="z-0 w-full px-3 py-1 flex group relative justify-center items-center cursor-pointer transition-opacity tap-highlight-transparent data-[disabled=true]:cursor-not-allowed data-[disabled=true]:opacity-30 data-[hover-unselected=true]:opacity-disabled outline-none data-[focus-visible=true]:z-10 data-[focus-visible=true]:outline-2 data-[focus-visible=true]:outline-focus data-[focus-visible=true]:outline-offset-2 h-9 text-medium rounded-medium"
-                data-key="books"
-                data-slot="tab"
-                id="react-aria-:r9:-tab-books"
-                role="tab"
-                tabindex="-1"
-                type="button"
-              >
-                <div
-                  class="relative z-10 whitespace-nowrap transition-colors text-default-500 group-data-[selected=true]:text-primary-foreground"
-                  data-slot="tabContent"
-                >
-                  Books
-                </div>
-              </button>
-              <button
-                aria-selected="false"
-                class="z-0 w-full px-3 py-1 flex group relative justify-center items-center cursor-pointer transition-opacity tap-highlight-transparent data-[disabled=true]:cursor-not-allowed data-[disabled=true]:opacity-30 data-[hover-unselected=true]:opacity-disabled outline-none data-[focus-visible=true]:z-10 data-[focus-visible=true]:outline-2 data-[focus-visible=true]:outline-focus data-[focus-visible=true]:outline-offset-2 h-9 text-medium rounded-medium"
-                data-key="users"
-                data-slot="tab"
-                id="react-aria-:r9:-tab-users"
-                role="tab"
-                tabindex="-1"
-                type="button"
-              >
-                <div
-                  class="relative z-10 whitespace-nowrap transition-colors text-default-500 group-data-[selected=true]:text-primary-foreground"
-                  data-slot="tabContent"
-                >
-                  Users
-                </div>
-              </button>
-            </div>
-          </div>
-        </li>
+        />
       </ul>
       <ul
         class="flex gap-4 h-full flex-row flex-nowrap items-center data-[justify=start]:justify-start data-[justify=start]:flex-grow data-[justify=start]:basis-0 data-[justify=center]:justify-center data-[justify=end]:justify-end data-[justify=end]:flex-grow data-[justify=end]:basis-0"
@@ -272,7 +200,7 @@ exports[`NavbarComponent renders correctly logged out 1`] = `
           aria-haspopup="true"
           class="flex relative justify-center items-center box-border overflow-hidden align-middle outline-none data-[focus-visible=true]:z-10 data-[focus-visible=true]:outline-2 data-[focus-visible=true]:outline-focus data-[focus-visible=true]:outline-offset-2 w-8 h-8 text-tiny bg-secondary text-secondary-foreground rounded-full ring-2 ring-offset-2 ring-offset-background dark:ring-offset-background-dark ring-secondary z-10 aria-expanded:scale-[0.97] aria-expanded:opacity-70 subpixel-antialiased transition-transform"
           data-slot="trigger"
-          id="react-aria-:rf:"
+          id="react-aria-:r9:"
           type="button"
         >
           <span
