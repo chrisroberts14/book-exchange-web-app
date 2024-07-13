@@ -1,6 +1,6 @@
 import * as axios from "axios";
 
-import { login, signup, setToken, authHeader } from "./api_calls.js";
+import { login, signup, setToken, authHeader, getAllBooks } from "./api_calls.js";
 
 jest.mock("axios");
 
@@ -61,4 +61,18 @@ describe("setToken", () => {
       setToken("test");
       expect(authHeader()).toStrictEqual({headers: {Authorization: "Bearer test"}});
     });
+});
+
+describe("getAllBooks", () => {
+  it("should return all books", async () => {
+    axios.get.mockResolvedValue({data: [{title: "test", author: "test"}]});
+    const data = await getAllBooks();
+    expect(data).toStrictEqual([{title: "test", author: "test"}]);
+  });
+
+  it("should return an error when server errors occur", async () => {
+    axios.get.mockRejectedValue(new Error("An error has occurred."));
+    const data = await getAllBooks();
+    expect(data).toStrictEqual({errorMessage: "An error has occurred."});
+  });
 });
