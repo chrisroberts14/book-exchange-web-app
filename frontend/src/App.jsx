@@ -1,11 +1,11 @@
-import {useEffect, useState} from "react";
-
+import { useEffect, useState } from "react";
 import { NavbarComponent } from "./components/Navbar/Navbar";
-import {setToken, getAllBooks, getAllListings} from "./api/api_calls";
+import { setToken, getAllBooks, getAllListings } from "./api/api_calls";
 import { BookCard } from "./components/BookCard/BookCard.jsx";
 import { CardsDisplay } from "./components/CardsDisplay/CardsDisplay.jsx";
-import {ErrorMessageBar} from "./components/ErrorMessageBar/ErrorMessageBar.jsx";
-import {ListingCard} from "./components/ListingCard/ListingCard.jsx";
+import { ErrorMessageBar } from "./components/ErrorMessageBar/ErrorMessageBar.jsx";
+import { ListingCard } from "./components/ListingCard/ListingCard.jsx";
+import { NotLoggedInPage } from "./components/NotLoggedInPage/NotLoggedInPage.jsx";
 
 export function App() {
   const [user, setUser] = useState(null);
@@ -73,7 +73,7 @@ export function App() {
     <div>
       <NavbarComponent loggedIn={user} setUser={setUser} user={user} screenState={screenState} setState={setScreenState}/>
         <ErrorMessageBar message={errorMessage} visible={isError}/>
-        {user ? <CardsDisplay cards={cards}/> : <p>Not logged in</p>}
+        {user ? <CardsDisplay cards={cards}/> : <NotLoggedInPage/>}
     </div>
   );
 }

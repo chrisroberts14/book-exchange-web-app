@@ -9,7 +9,7 @@ import {
   DropdownItem,
   Avatar,
   Tabs,
-  Tab,
+  Tab, user,
 } from "@nextui-org/react";
 
 import { LoginSignUpForm } from "../LoginSignUpForm/LoginSignUpForm.jsx";
@@ -42,18 +42,18 @@ export const NavbarComponent = (input) => {
       </NavbarBrand>
       <NavbarContent justify="center">
         <NavbarItem>
-          <Tabs
-            aria-label="Tabs radius"
-            className="gap-36"
-            color="primary"
-            size="lg"
-            selectedKey={input.screenState}
-            onSelectionChange={(key) => input.setState(key)}
+          {input.user ? <Tabs
+              aria-label="Tabs radius"
+              className="gap-36"
+              color="primary"
+              size="lg"
+              selectedKey={input.screenState}
+              onSelectionChange={(key) => input.setState(key)}
           >
             <Tab key="listings" title="Listings"/>
             <Tab key="books" title="Books"/>
             <Tab key="users" title="Users"/>
-          </Tabs>
+          </Tabs> : null}
         </NavbarItem>
       </NavbarContent>
       <NavbarContent justify="end">
