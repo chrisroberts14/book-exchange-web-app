@@ -8,5 +8,6 @@
     </content>
     <orderEntry type="jdk" jdkName="Python 3.12 (book-exchange-web-app)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="@types/jest" level="application" />
   </component>
 </module>

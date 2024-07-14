@@ -86,6 +86,7 @@
     "collectCoverageFrom": [
       "src/**/*.{js,jsx}",
       "!src/components/icons.jsx"
-    ]
+    ],
+    "slowTestThreshold": 20
   }
 }
