@@ -6,6 +6,7 @@ import { CardsDisplay } from "./components/CardsDisplay/CardsDisplay.jsx";
 import { ErrorMessageBar } from "./components/ErrorMessageBar/ErrorMessageBar.jsx";
 import { ListingCard } from "./components/ListingCard/ListingCard.jsx";
 import { NotLoggedInPage } from "./components/NotLoggedInPage/NotLoggedInPage.jsx";
+import { Footer } from "./components/Footer/Footer.jsx";
 
 export function App() {
   const [user, setUser] = useState(null);
@@ -71,9 +72,10 @@ export function App() {
 
   return (
     <div>
-      <NavbarComponent loggedIn={user} setUser={setUser} user={user} screenState={screenState} setState={setScreenState}/>
+    <NavbarComponent loggedIn={user} setUser={setUser} user={user} screenState={screenState} setState={setScreenState}/>
         <ErrorMessageBar message={errorMessage} visible={isError}/>
         {user ? <CardsDisplay cards={cards}/> : <NotLoggedInPage/>}
+    <Footer/>
     </div>
   );
 }
