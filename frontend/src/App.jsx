@@ -42,26 +42,33 @@ export function App() {
             switch (screenState) {
                 case "books":
                     const books_response = await getAllBooks();
-                    if (books_response.errorMessage) {
-                        setIsError(true);
-                        setTimeout(() => setIsError(false), 5000);
-                        setErrorMessage(books_response.errorMessage);
-                        return;
+                    if (books_response)
+                    {
+                        if (books_response.errorMessage !== undefined) {
+                            setIsError(true);
+                            setTimeout(() => setIsError(false), 5000);
+                            setErrorMessage(books_response.errorMessage);
+                            return;
+                        }
+                        setCards(books_response.map((book) => <BookCard key={book.id} book={book}/>));
                     }
-                    setCards(books_response.map((book) => <BookCard key={book.id} book={book}/>));
                     break;
                 case "listings":
                     const listings_response = await getAllListings();
-                    if (listings_response.errorMessage) {
-                        setIsError(true);
-                        setTimeout(() => setIsError(false), 5000);
-                        setErrorMessage(listings_response.errorMessage);
-                        return;
+                    if (listings_response){
+                        if (listings_response.errorMessage !== undefined) {
+                            setIsError(true);
+                            setTimeout(() => setIsError(false), 5000);
+                            setErrorMessage(listings_response.errorMessage);
+                            return;
+                        }
+                        setCards(listings_response.map((listing) => <ListingCard key={listing.id} listing={listing}/>));
                     }
-                    setCards(listings_response.map((listing) => <ListingCard key={listing.id} listing={listing}/>));
                     break;
                 default:
-                    console.log("Default case hit in switch statement in App.jsx");
+                    setIsError(true);
+                    setTimeout(() => setIsError(false), 5000);
+                    setErrorMessage("An error has occurred. (Users are not yet implemented)");
                     setCards([]);
                     break;
             }
@@ -72,10 +79,10 @@ export function App() {
 
   return (
     <div>
-    <NavbarComponent loggedIn={user} setUser={setUser} user={user} screenState={screenState} setState={setScreenState}/>
-        <ErrorMessageBar message={errorMessage} visible={isError}/>
-        {user ? <CardsDisplay cards={cards}/> : <NotLoggedInPage/>}
-    <Footer/>
+    <NavbarComponent loggedIn={user} setUser={setUser} user={user} screenState={screenState} setState={setScreenState} data-testid="page-navbar"/>
+        <ErrorMessageBar message={errorMessage} visible={isError} data-testid="error-message"/>
+        {user ? <CardsDisplay cards={cards} data-testid="cards-display-page"/> : <NotLoggedInPage data-testid="not-logged-in-page"/>}
+    <Footer data-testid="page-footer"/>
     </div>
   );
 }

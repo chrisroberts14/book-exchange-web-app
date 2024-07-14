@@ -3,7 +3,7 @@
 
 export const CardsDisplay = ({ cards }) => {
     return (
-        <div style={{display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "10px", backgroundColor:"dimgray", padding: "10px"}}>
+        <div data-testid="cards-display" style={{display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "10px", backgroundColor:"dimgray", padding: "10px"}}>
             {cards}
         </div>
     );

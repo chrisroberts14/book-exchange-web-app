@@ -6,7 +6,7 @@ import {
     Link,
     Divider
 } from "@nextui-org/react";
-import {GithubIcon} from "../icons.tsx";
+import { GithubIcon } from "../icons.jsx";
 
 
 export const Footer = () => {

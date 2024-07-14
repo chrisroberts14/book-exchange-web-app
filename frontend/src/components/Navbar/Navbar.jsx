@@ -50,9 +50,9 @@ export const NavbarComponent = (input) => {
               selectedKey={input.screenState}
               onSelectionChange={(key) => input.setState(key)}
           >
-            <Tab key="listings" title="Listings"/>
-            <Tab key="books" title="Books"/>
-            <Tab key="users" title="Users"/>
+            <Tab key="listings" title="Listings" data-testid="listings-tab"/>
+            <Tab key="books" title="Books" data-testid="books-tab"/>
+            <Tab key="users" title="Users" data-testid="users-tab"/>
           </Tabs> : null}
         </NavbarItem>
       </NavbarContent>
