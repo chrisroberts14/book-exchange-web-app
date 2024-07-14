@@ -4,6 +4,7 @@ import { SwitchProps, useSwitch } from "@nextui-org/switch";
 import clsx from "clsx";
 
 import { useTheme } from "@/hooks/use-theme";
+// @ts-ignore
 import { SunFilledIcon, MoonFilledIcon } from "@/components/icons.jsx";
 
 export interface ThemeSwitchProps {
